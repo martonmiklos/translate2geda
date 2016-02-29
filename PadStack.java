@@ -1,5 +1,6 @@
-// BXLDecoder.java - a utility for converting Huffman encoded files
-// into text, ported to Java from the vala code by Geert Jordaens
+// translate2geda.java - a utility for converting device definitions
+// to geda gschem and PCB compatibl formats
+// PadStack.java interprets BXL padstack definitions
 //
 // PadStack.java v1.0
 // Copyright (C) 2016 Erich S. Heinzle, a1039181@gmail.com
@@ -21,7 +22,7 @@
 //    along with this program; if not, write to the Free Software
 //    Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301, USA.
 //    
-//    BXLDecoder Copyright (C) 2016 Erich S. Heinzle a1039181@gmail.com
+//    translate2geda Copyright (C) 2016 Erich S. Heinzle a1039181@gmail.com
 
 
 public class PadStack {
