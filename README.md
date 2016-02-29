@@ -18,14 +18,14 @@ Export to Kicad is planned once conversion functionality is in place and satisfa
 
 Export to Eagle is also planned, as Eagle have been good enough to use an easily parsed XML format.
 
-BXL files are a package and vendor agnostic format that includes pad, symbol and footprint definitions 
-in a single binary file encoded with adaptive Huffman encoding. The adpative Huffman decoding code was ported to Java from vala code originally written by Geert Jordaens.
+BXL files are a package and vendor agnostic device description format that includes pad, symbol and footprint definitions 
+in a single binary file encoded with adaptive Huffman encoding. The adaptive Huffman decoding code was ported to Java from vala code originally written by Geert Jordaens.
 
-BSDL files are boundary surface description language file that include a pin map which can be used to create a symbol.
+BSDL files are boundary surface description language files that include a pin map which can be used to create a symbol.
 
 IBIS files are similar in that a pin map allows a symbol to be generated.
 
-Recent XML format Eagle .lbr files contain a set of layer definitions, packages (footprints), and symbols, but the pin mapping between symbols and footprints is defined in a "deviceset" section, to allow symbols to map to different packages. This has been dealt with by exporting an individual symbol with a pin mapping for each of the packages supported in the deviceset, with a distinct "\_FOOTPRINTNAME" appended to each of the pin mappings defined in the deviceset.
+Recent XML format Eagle .lbr files contain a set of layer definitions, packages (footprints), and symbols, but the pin mapping between symbols and footprints is defined in a "deviceset" section, to allow symbols to map to different packages. This has been dealt with by exporting an individual symbol with a pin mapping for each of the packages supported in the deviceset, with a distinct "\_FOOTPRINTNAME" appended to each of the pin mappings defined in the deviceset, i.e. a symbol with three different pin mappings will result in three different symbols being generated with unique footprint=SPECIFICFP fields.
 
 Main differences:
 
@@ -54,3 +54,10 @@ Install a git client, java virtual machine, and java compiler to suit your opera
 
 The utility will use the file ending of the provided file (.symdef, .mod, .lib, .bxl, .ibs, .bsd, etc) to determine which parser is required.
 
+To do:
+
+- open JSON format conversion
+- kicad export
+- Eagle polygons
+- Eagle export
+- summary file generation
