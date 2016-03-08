@@ -43,6 +43,13 @@ Disclaimer:
 
 This utility aims to avoid excessive reinvention of the wheel and aims to facilitate sharing of design efforts. As always, converter output is not guaranteed to be error free, and footprints should be carefully checked before using them in designs for which gerber files will be sent off for manufacture.
 
+Issues:
+
+- other EDA tools do not necessarily enforce sane pin spacings in their symbols, or grid aligned pins. Work is underway to flag such symbols and offer enforced grid spacing, at the risk of wrecking silk features/overall aesthetics.
+- pin mappings in other EDA suites do not necessarily conform to gEDA guidelines, but replacing the pin mappings with non-text, i.e. numbers, risks a loss of information and the introduction of errors - an aim is to minimise information loss as much as possible during conversion.
+- trapezoidal pads in Kicad and polygonal pads in Eagle are not supported yet, but work is underway to convert them to gEDA PCB compatible features.
+- Eagle is very flexible in how it defines "slots", and a relatively foolproof way of converting Eagle "gates" into geda "slots" eludes me for now.
+
 Usage:
 
 Install a git client, java virtual machine, and java compiler to suit your operating system
@@ -57,7 +64,10 @@ The utility will use the file ending of the provided file (.symdef, .mod, .lib, 
 To do:
 
 - open JSON format conversion
-- kicad export
+- Kicad import/export
+- Kicad trapezoidal pad support
 - Eagle polygons
 - Eagle export
+- flagging +/- optional enforcement of desired symbol pin spacing
+- option for numerical pin mapping to be applied, over-riding source text based pin mappings
 - summary file generation
