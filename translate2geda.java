@@ -795,6 +795,8 @@ public class translate2geda {
               symName = "npn-LTS.sym";
             } else if (tokens[0].equals("FLAG")) {
               symName = "ground-LTS.sym";
+            } else if (elType.startsWith("Opamps")) {
+              symName = "opamp-LTS.sym";
             } else {
               symName = "unknown-LTS.sym";
             }
