@@ -103,10 +103,17 @@ public class translate2geda {
       } catch (Exception e) {
         defaultFileIOError(e);
       }
+    } else if (filename.endsWith(".asc") ||
+               filename.endsWith(".ASC") ) {
+      try {
+        convertedFiles = parseLTSpice(filename);
+      } catch (Exception e) {
+        defaultFileIOError(e);
+      }
     } else {
       System.out.println("I didn't recognise a suitable file " +
                          "ending for conversion, i.e..\n" +
-                         "\t.bxl, .bsd, .ibs, .symdef" );
+                         "\t.bxl, .bsd, .ibs, .symdef, .asc" );
     }
 
     if (convertedFiles != null &&
@@ -737,6 +744,108 @@ public class translate2geda {
     convertedFiles.add(elName);
     return convertedFiles.toArray(new String[convertedFiles.size()]);
   } 
+
+  // LTSpice files contain components, and nets, which can be turned
+  // into a gschem schematic file
+  private static String [] parseLTSpice(String spiceFile) throws IOException {
+    File input = new File(spiceFile);
+    Scanner inputAsc = new Scanner(input);
+    String currentLine = "";
+    String newElement = "";
+    String newSymbol = "";
+    String newSchematic = "";
+    String symAttributes = "";
+    // now we trim the .asc file ending off:
+    String schematicName = spiceFile.substring(0,spiceFile.length()-4);
+    long xOffset = 40000; // to centre things a bit in gschem
+    long yOffset = 40000; // to centre things a bit in gschem
+    boolean extractedSchematic = false;
+    int lineCount = 0;
+
+    // we start build a gschem schematic
+    newSchematic = "v 20110115 1";
+
+    while (inputAsc.hasNext() && !extractedSchematic) {
+      currentLine = inputAsc.nextLine().trim();
+      if (currentLine.startsWith("WIRE")) {
+        SymbolNet wire = new SymbolNet(currentLine);
+        newSchematic = newSchematic
+            + "\n"
+            + wire.toString(xOffset, yOffset);
+      } else if (currentLine.startsWith("SYMBOL")
+                 || currentLine.startsWith("FLAG")) {
+        // we'll move this code into the Symbol object in due course
+            currentLine = currentLine.replaceAll("  "," ");
+            String[] tokens = currentLine.split(" ");
+            String elType = tokens[1];
+            String symName = "";
+            if (elType.equals("res")) {
+              symName = "resistor-LTS.sym";
+            } else if (elType.equals("cap")) {
+              symName = "capacitor-LTS.sym";
+            } else if (elType.equals("ind")) {
+              symName = "inductor-LTS.sym";
+            } else if (elType.equals("diode")) {
+              symName = "diode-LTS.sym";
+            } else if (elType.equals("voltage")) {
+              symName = "voltage-source-LTS.sym";
+            } else if (elType.equals("current")) {
+              symName = "current-source-LTS.sym";
+            } else if (elType.equals("npn")) {
+              symName = "npn-LTS.sym";
+            } else if (tokens[0].equals("FLAG")) {
+              symName = "ground-LTS.sym";
+            } else {
+              symName = "unknown-LTS.sym";
+            }
+            long xCoord = 0;
+            long yCoord = 0;
+            String rotation = "0";
+            if (tokens[0].equals("FLAG")) { // it's a ground symbol
+              xCoord = (long)(12.5*Integer.parseInt(tokens[1]));
+              yCoord = (long)(-(12.5*Integer.parseInt(tokens[2])));
+            } else { // not a ground symbol, an actual component
+              xCoord = (long)(12.5*Integer.parseInt(tokens[2]));
+              yCoord = (long)(-(12.5*Integer.parseInt(tokens[3])));
+              String elRotation = tokens[4];
+              if (elRotation.equals("R90")) {
+                rotation = "270";
+              } else if (elRotation.equals("R180")) {
+                rotation = "180";
+              } else if (elRotation.equals("R270")) {
+                rotation = "90";
+              }
+            }
+            newSchematic = newSchematic
+                + "\n"
+                + "C "
+                + (xOffset + xCoord) 
+                + " "
+                + (yOffset + yCoord)
+                + " "
+                + "1" + " "
+                + rotation + " "
+                + "0" + "  " 
+                + symName;
+            // will need to process "SYMATTR" here in due course
+            //        while (inputAsc.hasNext() &&
+            //   (!currentLine.startsWith("[")
+            //    || (lineCount == 0))) {
+            //currentLine = inputAsc.nextLine().trim();
+          //          if (!currentLine.startsWith("[")) {
+          //            }
+      }
+    }
+    // we can now finalise the gschem schematic
+    //symAttributes = symAttributes
+    // + SymbolText.BXLAttributeString(newPinList.textRHS(),0, FPAttr);
+    String networkName = schematicName + ".sch";
+    // we now write the converted schematic data to a file
+    elementWrite(networkName, newSchematic);
+    String [] returnedFilename = {networkName};
+    return returnedFilename;
+  }
+
 
   // IBIS files provide pin mapping suitable for symbol generation
   // but do not provide package/footprint information
