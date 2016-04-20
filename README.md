@@ -7,8 +7,9 @@ A utility for converting:
 - IBIS (.ibs) (working)
 - gschem symdef (working), and
 - BSDL (.bsd) (working)
+- LT-Spice (.asc)
 
-symbols and footprints to geda compatible formats.
+symbols and footprints and LT-Spice schematics to geda compatible formats.
 
 The Kicad portion of the utility is based on the KicadModuleToGEDA and KicadSymbolToGEDA utilities.
 
@@ -27,6 +28,8 @@ IBIS files are similar in that a pin map allows a symbol to be generated.
 
 Recent XML format Eagle .lbr files contain a set of layer definitions, packages (footprints), and symbols, but the pin mapping between symbols and footprints is defined in a "deviceset" section, to allow symbols to map to different packages. This has been dealt with by exporting an individual symbol with a pin mapping for each of the packages supported in the deviceset, with a distinct "\_FOOTPRINTNAME" appended to each of the pin mappings defined in the deviceset, i.e. a symbol with three different pin mappings will result in three different symbols being generated with unique footprint=SPECIFICFP fields.
 
+LT-Spice .asc files are text files exported by LT-Spice and capture the schematic used in LT-Spice for circuit modelling. The .asc file contains "WIRE"s which connect discrete components.
+
 Main differences:
 
 X and Y coordinate systems are the same in gEDA and Kicad, with Y +ve downwards, but Kicad uses +ve CW rotation and decidegrees for arcs and circles.
@@ -38,6 +41,8 @@ BXL files have +ve up, but +ve CCW for rotation and degrees, like gEDA.
 Eagle files can specify zero line widths, relying on default line width value for silk features. This utility defaults to 10mil (0.010 inch) line width if a zero line width is encountered.
 
 Eagle can specify polygons in footprint definitions, which are not supported in geda PCB. The utility flags converted footprints with polygons that could not be converted.
+
+LT-Spice has +ve Y down, unlike gschem. Rotation is in the opposite direction to gschem. The grid in LT-Spice increase in mutiples of 16, and a conversion factor of 12.5 achieves pin spacings which are multiples of 100, and suited to gschem. For the WIREs in LT-Spice to connect properly in the converted gschem schematic, custom gschem symbols have been generated which match the dimensions and pinouts of the default LT-Spice components. These end in -LTS.sym, and need to be in the default search path of gschem when gschem is used to view and edit the converted schematic.
 
 Disclaimer:
 
@@ -71,3 +76,12 @@ To do:
 - flagging +/- optional enforcement of desired symbol pin spacing
 - option for numerical pin mapping to be applied, over-riding source text based pin mappings
 - summary file generation
+- copying all of the attributes for each component described within the LT-Spice .asc file to the components in the converted gschem schematic file.
+
+How to generate additional LT-Spice compatible symbols:
+
+If translate2geda is unaware of a symbol description, the converted schematic will have an "unkown-LTS.sym" placed at the position of the unkownn symbol.
+
+The next step is to load an equivalent gschem symbol which is a very close, or ideally, exact, match for the pin geometry of the missing component. Once placed in position, the symbol should be highlighted, and "e b" pressed to embed the component in the schematic, and the schematic then saved.
+
+The schematic should then be copied ot another file "mynewsymbol-LTS.sym", and opened in an editor. The first line of the schematic file should be preserved, but everything other than the embedded component descriptions between the "[" and "]" bracket deleted. The file is then saved. The file "mynewsymbol-LTS.sym" is then opened in gschem. The symbol is selected with select all, cut, and after using the scroll bars to get to the origin at the lower left corner of the screen, the symbol can be pasted close to the origin. The symbol is then saved. A copy of the symbol is then placed gschem's symbol search path. The converted schematic is then loaded, after changing "unknown-LTS.sym" to the new "mynewsymbol-LTS.sym". If lucky, the new symbols origin ill match that needed for the schematic. If not, take note of the (x,y) offset required to place it properly, and/or any lengthening, shortening or translation of pins required to effect a match, and undertake this again in gschem on the "mynewsymbol-LTS.sym" file, saving it again after modification. Reload gschem to view the converted schematic, and if all is well, you now have a matching gschem symbol. Ideally, translate2geda.java should be modified and recompiled to recognise the new symbol, to automate things subsequently.
