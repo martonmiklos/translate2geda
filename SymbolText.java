@@ -60,7 +60,7 @@ public class SymbolText extends SymbolElement
   //  boolean isRefDes = false;
   //  boolean isDeviceDes = false;
 
-  public void SymbolText()
+  public SymbolText()
   {
     output = "#Hmm, the no arg symbol circle constructor didn't do much";
   }

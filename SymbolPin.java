@@ -108,7 +108,7 @@ public class SymbolPin extends SymbolElement
     pinSeqTally = 0;
   }
 
-  public void SymbolPin()
+  public SymbolPin()
   {
     output = "#Hmm, the no arg symbol pin constructor didn't do much";
   }

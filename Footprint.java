@@ -250,8 +250,8 @@ public class Footprint
               }
 
           }
-        else if () {
-
+        else {
+          // not much to see, not $INDEX or $MODULE
         }
         
       }

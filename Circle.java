@@ -35,7 +35,6 @@
 * @return String = "ElementArc[x y width height startangle deltaangle thickness]"
 *
 */
-import java.math.*;
 
 public class Circle extends FootprintElementArchetype
 {
@@ -62,7 +61,7 @@ public class Circle extends FootprintElementArchetype
 	String kicadCircleDescriptor = "";
   long kicadLayer = 21; // might be useful for conversions to kicad
 
-	public void Circle()
+	public Circle()
 	{
 		output = "#Hmm, the no arg KicadDrawingCircle constructor didn't do much";
 	}

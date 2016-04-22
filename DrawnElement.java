@@ -114,7 +114,7 @@ public class DrawnElement extends FootprintElementArchetype
 
   String kicadDrawnSegmentDescriptor = "";
 
-  public void DrawnElement()
+  public DrawnElement()
   {
     output = "#Hmm, the no arg KicadDrawingElement "
         + "constructor didn't do much";
@@ -203,7 +203,7 @@ public class DrawnElement extends FootprintElementArchetype
     long y1 = mmTextToNM(y1text)/1000;
     long x2 = mmTextToNM(x2text)/1000;
     long y2 = mmTextToNM(y2text)/1000;
-    long width = mmTextToNM(widthText.substring(6))/1000;
+    //long width = mmTextToNM(widthText.substring(6))/1000; // not used
     long newWidthNm = 0;
     if (Math.abs(x2-x1) > Math.abs(y2-y1)) {
       newWidthNm = Math.abs(y2-y1);

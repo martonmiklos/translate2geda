@@ -1,4 +1,4 @@
-// convert2geda - a utility for turning all the things to gEDA elements
+// translate2geda - a utility for turning all the things to gEDA elements
 // EagleDevice.java v1.0
 // Copyright (C) 2016 Erich S. Heinzle, a1039181@gmail.com
 
@@ -19,7 +19,7 @@
 //    along with this program; if not, write to the Free Software
 //    Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301, USA.
 //    
-//    convert2geda Copyright (C) 2016 Erich S. Heinzle a1039181@gmail.com
+//    translate2geda Copyright (C) 2016 Erich S. Heinzle a1039181@gmail.com
 
 import java.util.ArrayList;
 
@@ -31,7 +31,6 @@ public class EagleDevice {
   private ArrayList<String> applicableSymbols = new ArrayList<String>();
 
   private String[] gateNameList;
-  private String symbolName = "";
 
   public EagleDevice(ArrayList<String> deviceDesc,
                      ArrayList<String> gateNames) {

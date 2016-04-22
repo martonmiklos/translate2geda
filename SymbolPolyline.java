@@ -54,7 +54,7 @@ public class SymbolPolyline extends SymbolElement
   long minX = 0;
   long minY = 0;
 
-  public void SymbolPolyline()
+  public SymbolPolyline()
   {
     output = "#Hmm, the no arg symbol polygon constructor didn't do much";
   }

@@ -38,8 +38,6 @@
  *
  */
 
-import java.math.*;
-
 public class Arc extends FootprintElementArchetype
 {
   String output = "";
@@ -133,9 +131,9 @@ public class Arc extends FootprintElementArchetype
     double midX = (xCoordOneNm + xCoordTwoNm)/2;
     double midY = (yCoordOneNm + yCoordTwoNm)/2;
 
-    // ad find their offsets relative to the arc start point
-    double midXdx = midX - xCoordOneNm;
-    double midYdy = midY - yCoordOneNm;
+    // and find their offsets relative to the arc start point
+    //double midXdx = midX - xCoordOneNm;
+    //double midYdy = midY - yCoordOneNm; // not needed
 
     // the following is not really necessary, but it
     // makes the deltaAngle sign the same in all cases

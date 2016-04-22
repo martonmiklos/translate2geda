@@ -1,4 +1,4 @@
-// convert2geda - a utility for turning all the things to gEDA elements
+// translate2geda - a utility for turning all the things to gEDA elements
 // EagleDeviceSet.java v1.0
 // Copyright (C) 2016 Erich S. Heinzle, a1039181@gmail.com
 
@@ -19,7 +19,7 @@
 //    along with this program; if not, write to the Free Software
 //    Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301, USA.
 //    
-//    convert2geda Copyright (C) 2016 Erich S. Heinzle a1039181@gmail.com
+//    translate2geda Copyright (C) 2016 Erich S. Heinzle a1039181@gmail.com
 
 import java.util.ArrayList;
 import java.util.Scanner;
@@ -45,8 +45,8 @@ public class EagleDeviceSet {
             if (field.startsWith("name=")) {
               // may not need to use the deviceset name
               // since device gate listings include symbol names
-              String deviceSetName =
-                  field.substring(5).replaceAll("\"","");
+              // String deviceSetName
+              //   = field.substring(5).replaceAll("\"","");
             }
           }
         } else if (currentLine.startsWith("<gates")) {
@@ -93,7 +93,7 @@ public class EagleDeviceSet {
         contains = true;
       }
     }
-    return true;
+    return contains;
   }
 
   // we can use this to return a list of devices using a given

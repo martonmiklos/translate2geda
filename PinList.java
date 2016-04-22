@@ -520,8 +520,6 @@ public class PinList {
   private void calculateBoundingBox(int spacing) {
     // we now make the bounding box bigger along
     // sides which have no pins
-    int thickness = 0;
-    int fill = 0;
     if (upPinTally == 0) {
       boundingBoxYMin -= spacing;
     }

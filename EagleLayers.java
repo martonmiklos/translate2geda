@@ -42,6 +42,7 @@ public class EagleLayers {
   boolean verbose = false;
   int layerCount = 0;
 
+  // we use the following to speed up searches for a layer match
   String currentTopCopper = "";
   String currentBottomCopper = "";
   String currentTopSilk = "";
@@ -121,36 +122,35 @@ public class EagleLayers {
   public boolean isDrawnTopSilk(String layerNum) {
     layerNum = extractLayerNumText(layerNum);
     return (layerNum.equals(currentTopSilk));
-    // return searchForLayerMatch(layerNum, "tPlace");
   }
 
   public boolean isTopCopper(String layerNum) {
     layerNum = extractLayerNumText(layerNum);
     return (layerNum.equals(currentTopCopper));
-    // return searchForLayerMatch(layerNum, "Top");
   }
 
   public boolean isBottomCopper(String layerNum) {
     layerNum = extractLayerNumText(layerNum);
     return (layerNum.equals(currentBottomCopper));
-    // return searchForLayerMatch(layerNum, "Bottom");
   }
 
   public boolean isSilkText(String layerNum) {
     layerNum = extractLayerNumText(layerNum);
     return (layerNum.equals(currentDrawnSilkText));
-    // return searchForLayerMatch(layerNum, "tNames");
   }
 
-  private boolean searchForLayerMatch(String num, String text) {
-    boolean returnVal = false;
-    for (List<String> layerValues : layers) {
-      returnVal = (returnVal ||
-                   (layerValues.get(0).equals(num) &&
-                    layerValues.get(1).equals(text)));
-    }
-    return returnVal;
-  }
+  // the following was the first pass implementation
+  // but was inefficient
+  // 
+  //  private boolean searchForLayerMatch(String num, String text) {
+  //  boolean returnVal = false;
+  //  for (List<String> layerValues : layers) {
+  //    returnVal = (returnVal ||
+  //                 (layerValues.get(0).equals(num) &&
+  //                  layerValues.get(1).equals(text)));
+  //  }
+  //  return returnVal;
+  //}
 
   private String extractLayerNumText(String arg) {
     // we let the method cope with an entire XML line

@@ -14,13 +14,13 @@ public class FootprintElementArchetype
 		return yOffsetNm;
 	}
 
-	public void FootprintElementArchetype()
+	public FootprintElementArchetype()
 	{
 		xOffsetNm = 0;
 		yOffsetNm = 0;
 	}
 
-        public void FootprintElementArchetype(long x, long y)
+        public FootprintElementArchetype(long x, long y)
         {
                 xOffsetNm = x;
                 yOffsetNm = y;
