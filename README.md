@@ -55,6 +55,7 @@ Issues:
 - trapezoidal pads in Kicad and polygonal pads in Eagle are not supported yet, but work is underway to convert them to gEDA PCB compatible features.
 - Eagle is very flexible in how it defines "slots", and a relatively foolproof way of converting Eagle "gates" into geda "slots" eludes me for now.
 - LTSpice components have their position and refdes converted, but component values are not yet ported
+- BXL conversion uses Adaptive Huffman Decoding. This takes a lot of shuffling of nodes within trees. Plan to wander off and make some coffee while it decodes.
 
 Usage:
 
@@ -69,7 +70,6 @@ The utility will use the file ending of the provided file (.symdef, .mod, .lib, 
 
 To do:
 
-- get the code building cleanly with gcj, to allow the code to run as a native binary
 - open JSON format conversion
 - Kicad import/export
 - Kicad trapezoidal pad support
@@ -83,7 +83,7 @@ To do:
 
 How to generate additional LT-Spice compatible symbols:
 
-If translate2geda is unaware of a symbol description, the converted schematic will have an "unkown-LTS.sym" placed at the position of the unkownn symbol.
+If translate2geda is unaware of a symbol description, the converted schematic will have an "unknown-LTS.sym" placed at the position of the unknown symbol.
 
 The next step is to load an equivalent gschem symbol which is a very close, or ideally, exact, match for the pin geometry of the missing component. Once placed in position, the symbol should be highlighted, and "e b" pressed to embed the component in the schematic, and the schematic then saved.
 
@@ -93,10 +93,22 @@ The file "mynewsymbol-LTS.sym" is then opened in gschem. The symbol is selected 
 
 A copy of the symbol is then placed in gschem's symbol search path.
 
-The converted schematic is then loaded, after changing "unknown-LTS.sym" to the new "mynewsymbol-LTS.sym" within the schematic file. If lucky, the new symbol's origin will match that needed for the schematic. If not, take note of the (x,y) offset required to place it properly, and/or any lengthening, shortening or translation of pins required to effect a match, and undertake this again in gschem on the "mynewsymbol-LTS.sym" file, saving it again after modification.
+The converted schematic is then loaded, after changing "unknown-LTS.sym" to the new "mynewsymbol-LTS.sym" within the schematic file. If lucky, the new symbol's origin will match that needed for the schematic. If not, take note of the (x,y) offset required to place it properly, and/or any lengthening, shortening or translation of pins required to effect a match, and undertake this again in gschem on the "mynewsymbol-LTS.sym" file, saving it again after modification. This can be tricky, as gschem does not show a symbol placed in the negative portions of the screen, and you will have to drag and drop it off outside of the display area to some extent. Alternatively, the text file can be manually edited.
 
 Reload gschem to view the converted schematic, and if all is well, you now have a matching gschem symbol. Ideally, translate2geda.java should be modified and recompiled to recognise the new symbol, to automate things subsequently.
 
 How to build a native binary with gcj:
 
-This is the current focus of development. The gnu gcj compiler is less permissive than the usual jdk javac, and does not seem to have null safe trim() and/or hasNext() methods in the gjc library, which seem to return nulls occasionally. Modifications to the code to deal with these issues are underway. A native binary option will facilitate efforts to use the code as a cgi delivered converter by those wishing to do so.
+This has now been achieved. The gnu gcj compiler is less permissive than the usual jdk javac, and the use of hasNext() in the gjc library behaves differently to that in the standard jdk libraries, and can return TRUE but then lead to a null when nestLine() is called, which then cause subsequent null pointer exceptions when trim() or split() are called. Modifications to the code have been made to deal with this difference, namely, hasNextLine() is now used instead.
+
+To compile a native binary, perhaps because you want to use it compactly in a cgi application:
+
+	sudo apt-get install gcj-jdk
+	gcj -I src -C *.java
+	gcj -I src --main=translate2geda *.class -o testing.out
+
+This has been tested successfully on:
+
+	Ubuntu 14.04.4 LTS
+	/usr/lib/x86_64-linux-gnu/libgcj.so.14
+

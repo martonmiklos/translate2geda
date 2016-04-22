@@ -37,7 +37,7 @@ public class EagleDeviceSet {
       Scanner newSet = new Scanner(singleDeviceSet);
       ArrayList<String> gateNames = new ArrayList<String>();
       ArrayList<String> currentDevice = new ArrayList<String>();
-      while (newSet.hasNext()) {
+      while (newSet.hasNextLine()) {// seems gcj hasNext != hasNextLine
         currentLine = newSet.nextLine();
         if (currentLine.startsWith("<deviceset ")) {
           String[] deviceSetTokens = currentLine.split(" ");

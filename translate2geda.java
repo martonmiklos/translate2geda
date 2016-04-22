@@ -155,40 +155,43 @@ public class translate2geda {
     long yOffset = 0; // used to justify symbol
     long textXOffset = 0; // used for attribute fields
 
-    while (eagleLib.hasNext()) {
-      currentLine = eagleLib.nextLine().trim();
+    String lastline = "";
+
+    while (eagleLib.hasNextLine() && (lastline != null)) {
+      lastline = eagleLib.nextLine();// make nextLine() null safe 
+      currentLine = safelyTrim(lastline); // when using gcj libs
       if (currentLine.startsWith("<layers>")) {
-        while (eagleLib.hasNext() &&
+        while (eagleLib.hasNextLine() &&
                !currentLine.startsWith("</layers>")) {
           currentLine = eagleLib.nextLine().trim();
           layerDefs.add(currentLine);
         }
       } else if (currentLine.startsWith("<packages>")) {
-        while (eagleLib.hasNext() &&
+        while (eagleLib.hasNextLine() &&
               !currentLine.startsWith("</packages>")) {
           currentLine = eagleLib.nextLine().trim();
           packageDefs.add(currentLine);
         }
       } else if (currentLine.startsWith("<symbols>")) {
-        while (eagleLib.hasNext() &&
+        while (eagleLib.hasNextLine() &&
               !currentLine.startsWith("</symbols>")) {
           currentLine = eagleLib.nextLine().trim();
           symbolDefs.add(currentLine);
         }
       } else if (currentLine.startsWith("<devicesets>")) {
         currentLine = eagleLib.nextLine().trim();
-        while (eagleLib.hasNext() &&
+        while (eagleLib.hasNextLine() &&
               !currentLine.startsWith("</devicesets>")) {
           if (currentLine.startsWith("<deviceset ") &&
-              eagleLib.hasNext()) {
+              eagleLib.hasNextLine()) {
             String currentGates = "";
             currentLine = eagleLib.nextLine().trim();
-            while (eagleLib.hasNext() &&
+            while (eagleLib.hasNextLine() &&
                    !currentLine.startsWith("</deviceset>")) {
               if (currentLine.startsWith("<gates>")) {
                 currentGates = currentLine + "\n";
                 currentLine = eagleLib.nextLine().trim();
-                while (eagleLib.hasNext() &&
+                while (eagleLib.hasNextLine() &&
                        !currentLine.startsWith("</gates>")) {
                   currentGates = currentGates + currentLine + "\n";
                   // System.out.println("Found some gates");
@@ -200,7 +203,7 @@ public class translate2geda {
                 String currentDef = currentLine + "\n";
                 // System.out.println("Found a device set line");
                 currentLine = eagleLib.nextLine().trim();
-                while (eagleLib.hasNext() &&
+                while (eagleLib.hasNextLine() &&
                        !currentLine.startsWith("</device>")) {
                   currentDef = currentDef + currentLine + "\n";
                   // System.out.println("Found a device set line");
@@ -212,11 +215,13 @@ public class translate2geda {
                 //System.out.println("Found a device set:");
                 //System.out.println(currentDef);
               }
-              currentLine = eagleLib.nextLine().trim();
+              lastline = eagleLib.nextLine();//make nextLine()nullsafe 
+              currentLine = safelyTrim(lastline);// when using gcj libs
             }
           }
-          currentLine = eagleLib.nextLine().trim(); //resume while loop
-        }
+          lastline = eagleLib.nextLine();// make nextLine() null safe 
+          currentLine = safelyTrim(lastline); // when using gcj libs
+        } //resume while loop
       }
     }
 
@@ -242,13 +247,15 @@ public class translate2geda {
 
     Scanner packagesBundle = new Scanner(packageDefString);
 
-    while (packagesBundle.hasNext()) {
-      currentLine = packagesBundle.nextLine().trim();
+    lastline = "";
+    while (packagesBundle.hasNextLine() && (lastline != null)) {
+      lastline = packagesBundle.nextLine();//make nextLine() null safe 
+      currentLine = safelyTrim(lastline); // when using gcj libs
       if (currentLine.startsWith("<package name")) {
         String [] tokens = currentLine.split(" ");
         String FPName
             = tokens[1].replaceAll("[\">=/]","").substring(4);
-        while (packagesBundle.hasNext() &&
+        while (packagesBundle.hasNextLine() &&
                !currentLine.startsWith("</package>")) {
           currentLine = packagesBundle.nextLine().trim();
           if (currentLine.startsWith("<smd") ||
@@ -345,9 +352,11 @@ public class translate2geda {
     if (verbose) {
       System.out.println("About to create individual symbols"); 
     }
-    
-    while (symbolBundle.hasNext()) {
-      currentLine = symbolBundle.nextLine().trim();
+
+    lastline = "";
+    while (symbolBundle.hasNextLine()) {
+      lastline = symbolBundle.nextLine();// make nextLine() null safe 
+      currentLine = safelyTrim(lastline); // when using gcj libs
       if (currentLine.startsWith("<symbol ")) {
         String [] tokens = currentLine.split(" ");
         String symbolName // name="......"
@@ -358,7 +367,7 @@ public class translate2geda {
         List<String> silkFeatures = new ArrayList<String>();
         List<String> attributeFields = new ArrayList<String>();
         pins = new PinList(0); // slots = 0
-        while (symbolBundle.hasNext() &&
+        while (symbolBundle.hasNextLine() &&
                !currentLine.startsWith("</symbol")) {
           currentLine = symbolBundle.nextLine().trim();
           if (currentLine.startsWith("<pin")) {
@@ -547,25 +556,30 @@ public class translate2geda {
 
     long xOffset = 0;
     long yOffset = 0;
+    String lastline = "";
 
-    while (textBSDL.hasNext()) {
-      currentLine = textBSDL.nextLine().trim();
+    while (textBSDL.hasNextLine() && (lastline != null)) {
+      lastline = textBSDL.nextLine();// make nextLine() null safe 
+      currentLine = safelyTrim(lastline); // when using gcj libs
       if (currentLine.startsWith("entity")) {
         String [] tokens = currentLine.split(" ");
         String symName = tokens[1].replaceAll("[\"]","");
-        while (textBSDL.hasNext() &&
-               !currentLine.startsWith("end")) {
-          currentLine = textBSDL.nextLine().trim();
+        while (textBSDL.hasNextLine()
+               && !currentLine.startsWith("end")) {
+          lastline = textBSDL.nextLine();// make nextLine() null safe 
+          currentLine = safelyTrim(lastline); // when using gcj libs
           if (currentLine.startsWith("constant")) {
             currentLine = currentLine.replaceAll("[:=]"," ");
             tokens = currentLine.split(" ");
             FPName = tokens[1].replaceAll("[\"]","_");
             pins = new PinList(0); // slots = 0
             boolean lastLine = false;
-            while (textBSDL.hasNext() &&
-                   !lastLine) {
-              currentLine = textBSDL.nextLine().trim();
-              if (currentLine.length() != 0) {
+            while (textBSDL.hasNextLine()
+                   && !lastLine) {
+              lastline = textBSDL.nextLine();//make nextLine()nullsafe 
+              currentLine = safelyTrim(lastline);// when using gcj libs
+              if ((currentLine.length() != 0) ) {
+                //                  && !currentLine.equals(" ") ) {
                 SymbolPin latestPin = new SymbolPin();
                 latestPin.populateBSDLElement(currentLine);
                 pins.addPin(latestPin);
@@ -576,9 +590,10 @@ public class translate2geda {
             }
           } else if (currentLine.startsWith("port (")) {
             boolean endOfPinDef = false;
-            while (textBSDL.hasNext() &&
+            while (textBSDL.hasNextLine() &&
                    !endOfPinDef) {
-              currentLine = textBSDL.nextLine().trim();
+              lastline = textBSDL.nextLine();//make nextLine()nullsafe 
+              currentLine = safelyTrim(lastline);// when using gcj libs
               if (currentLine.startsWith(")")) {
                 endOfPinDef = true;
               } else {
@@ -649,9 +664,11 @@ public class translate2geda {
     List<String> bottom = new ArrayList<String>();
 
     String currentState = "labels";
+    String lastline = "";
 
-    while (symDef.hasNext()) {
-      currentLine = symDef.nextLine().trim();
+    while (symDef.hasNext() && (lastline != null)) {
+      lastline = symDef.nextLine();// make nextLine() null safe 
+      currentLine = safelyTrim(lastline); // when using gcj libs
       if (currentLine.startsWith("[labels]") ||
           currentLine.startsWith("[LABELS]")) {
         currentState = "labels";
@@ -761,17 +778,18 @@ public class translate2geda {
     String schematicName = spiceFile.substring(0,spiceFile.length()-4);
     long xOffset = 40000; // to centre things a bit in gschem
     long yOffset = 40000; // to centre things a bit in gschem
-    boolean extractedSchematic = false;
     //int lineCount = 0; //unused
-
+    String lastline = "";
     long lastX = 0;
     long lastY = 0;
 
     // we start build a gschem schematic
     newSchematic = "v 20110115 1";
 
-    while (inputAsc.hasNext() && !extractedSchematic) {
-      currentLine = inputAsc.nextLine().trim();
+    while (inputAsc.hasNext()
+           && (lastline != null) ) {
+      lastline = inputAsc.nextLine(); // making nextLine() null safe 
+      currentLine = safelyTrim(lastline); // when using gcj libs
       if (currentLine.startsWith("SYMATTR")) {
         String[] tokens = currentLine.split(" ");
         if ("InstName".equals(tokens[1])) {
@@ -886,14 +904,18 @@ public class translate2geda {
     long yOffset = 0;
     boolean extractedSym = false;
     int lineCount = 0;
-
-    while (inputIBIS.hasNext() && !extractedSym) {
-      currentLine = inputIBIS.nextLine().trim();
+    String lastline = ""; 
+    while (inputIBIS.hasNext()
+           && !extractedSym
+           && (lastline != null)) {
+      lastline = inputIBIS.nextLine(); // making nextLine() null safe 
+      currentLine = safelyTrim(lastline); // when using gcj libs
       if (currentLine.startsWith("[Pin]")) {
-        while (inputIBIS.hasNext() &&
-               (!currentLine.startsWith("[")
-                || (lineCount == 0))) {
-          currentLine = inputIBIS.nextLine().trim();
+        while (inputIBIS.hasNext()
+               && (lastline != null)
+               && (!currentLine.startsWith("[") || (lineCount == 0))) {
+          lastline = inputIBIS.nextLine();// make nextLine() null safe 
+          currentLine = safelyTrim(lastline); // when using gcj libs
           lineCount++;
           if (!currentLine.startsWith("[")) {
             // the pin mapping info ends at the next [] marker
@@ -907,7 +929,8 @@ public class translate2geda {
                 latestPin.populateIBISElement(currentLine);
                 pins.addPin(latestPin);
               }
-              currentLine = inputIBIS.nextLine().trim();
+              lastline = inputIBIS.nextLine();//makenextLine()nullsafe 
+              currentLine = safelyTrim(lastline);// when using gcj libs
               if (currentLine.startsWith("[")) {
                 extractedSym = true;
               }
@@ -965,14 +988,17 @@ public class translate2geda {
     long xOffset = 0;
     long yOffset = 0; // used to justify symbol
     long textXOffset = 0; // used for attribute fields
+    String lastline = "";
 
-    while (textBXL.hasNext()) {
-      currentLine = textBXL.nextLine().trim();
+    while (textBXL.hasNextLine() && (lastline != null)) {
+      lastline = textBXL.nextLine(); // making nextLine() null safe 
+      currentLine = safelyTrim(lastline); // when using gcj libs
       if (currentLine.startsWith("PadStack")) {
           newElement = currentLine;
-          while (textBXL.hasNext() &&
+          while (textBXL.hasNext() && (lastline != null) &&
                  !currentLine.startsWith("EndPadStack")) {
-            currentLine = textBXL.nextLine().trim();
+            lastline = textBXL.nextLine();//make nextLine() null safe 
+            currentLine = safelyTrim(lastline); // when using gcj libs
             newElement = newElement + "\n" + currentLine;
           }
           padStacks.addPadStack(newElement);
@@ -980,9 +1006,10 @@ public class translate2geda {
       } else if (currentLine.startsWith("Pattern ")) {
         String [] tokens = currentLine.split(" ");
         String FPName = tokens[1].replaceAll("[\"]","");
-        while (textBXL.hasNext() &&
+        while (textBXL.hasNext() && (lastline != null) &&
                !currentLine.startsWith("EndPattern")) {
-          currentLine = textBXL.nextLine().trim();
+          lastline = textBXL.nextLine();// making nextLine() null safe 
+          currentLine = safelyTrim(lastline); // when using gcj libs
           if (currentLine.startsWith("Pad")) {
             //System.out.println("#Making new pad: " + currentLine);
             Pad newPad = padStacks.GEDAPad(currentLine);
@@ -1021,9 +1048,10 @@ public class translate2geda {
         List<String> silkFeatures = new ArrayList<String>();
         List<String> attributeFields = new ArrayList<String>();
         pins = new PinList(0); // slots = 0
-        while (textBXL.hasNext() &&
+        while (textBXL.hasNext() && (lastline != null) &&
                !currentLine.startsWith("EndSymbol")) {
-          currentLine = textBXL.nextLine().trim();
+          lastline = textBXL.nextLine();// making nextLine() null safe 
+          currentLine = safelyTrim(lastline); // when using gcj libs
           if (currentLine.startsWith("Pin")) {
             //System.out.println("#Making new pin: " + currentLine);
             SymbolPin latestPin = new SymbolPin();
@@ -1077,9 +1105,10 @@ public class translate2geda {
         // we now parse the other attributes for the component
         String [] tokens = currentLine.split(" ");
         String symbolName = tokens[1].replaceAll("[\"]","");
-        while (textBXL.hasNext() &&
+        while (textBXL.hasNext() && (lastline != null) &&
                !currentLine.startsWith("EndComponent")) {
-          currentLine = textBXL.nextLine().trim();
+          lastline = textBXL.nextLine();// making nextLine() null safe 
+          currentLine = safelyTrim(lastline); // when using gcj libs
           if (currentLine.startsWith("Attribute")) {
             //SymbolText attrText = new SymbolText();
             //attrText.populateBXLElement(currentLine);
@@ -1156,6 +1185,33 @@ public class translate2geda {
                            + "Probably a file IO issue:");
         System.out.println(e);
   }
+
+  // the following method is used to avoid problems
+  // with the gcj libs, which seem to occasionally return nulls
+  // if hasNext() instead of hasNextLine() is used before
+  // calling nextLine() to provide the string
+  private static String safelyTrim(String text) {
+    if (text != null) {
+      return text.trim();
+    } else {
+      return "";
+    }
+  } 
+
+  // Thought the following might be needed, but wasn't after all
+  // the gcj implementation seems OK
+  //  private static String[] safelySplit(String text, String pivot) {
+  //  if (text != null) {
+  //    String tokens[] = text.split(pivot); 
+  //    if (tokens != null) {
+  //      return tokens;
+  //    } else {
+  //      return new String[0];
+  //    }
+  //  } else {
+  //    return new String[0];
+  //  }
+  // } 
   
 }
 
