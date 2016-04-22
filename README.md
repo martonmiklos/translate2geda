@@ -69,6 +69,7 @@ The utility will use the file ending of the provided file (.symdef, .mod, .lib, 
 
 To do:
 
+- get the code building cleanly with gcj, to allow the code to run as a native binary
 - open JSON format conversion
 - Kicad import/export
 - Kicad trapezoidal pad support
@@ -95,3 +96,7 @@ A copy of the symbol is then placed in gschem's symbol search path.
 The converted schematic is then loaded, after changing "unknown-LTS.sym" to the new "mynewsymbol-LTS.sym" within the schematic file. If lucky, the new symbol's origin will match that needed for the schematic. If not, take note of the (x,y) offset required to place it properly, and/or any lengthening, shortening or translation of pins required to effect a match, and undertake this again in gschem on the "mynewsymbol-LTS.sym" file, saving it again after modification.
 
 Reload gschem to view the converted schematic, and if all is well, you now have a matching gschem symbol. Ideally, translate2geda.java should be modified and recompiled to recognise the new symbol, to automate things subsequently.
+
+How to build a native binary with gcj:
+
+This is the current focus of development. The gnu gcj compiler is less permissive than the usual jdk javac, and does not seem to have null safe trim() and/or hasNext() methods in the gjc library, which seem to return nulls occasionally. Modifications to the code to deal with these issues are underway. A native binary option will facilitate efforts to use the code as a cgi delivered converter by those wishing to do so.
