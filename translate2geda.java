@@ -149,7 +149,7 @@ public class translate2geda {
     ArrayList<String> symbolDefs = new ArrayList<String>();
     ArrayList<String> deviceSetDefs = new ArrayList<String>();
 
-    List<String> currentPackage = new ArrayList<String>();
+    //List<String> currentPackage = new ArrayList<String>(); //not used
 
     long xOffset = 0;
     long yOffset = 0; // used to justify symbol
@@ -535,7 +535,7 @@ public class translate2geda {
 
     String currentLine = "";
     List<String> portPinDef = new ArrayList<String>();
-    String newElement = "";
+    //  String newElement = ""; //unused
     String newSymbol = "";
     String symAttributes = "";
     String FPName = "DefaultFPName";
@@ -631,7 +631,7 @@ public class translate2geda {
     Scanner symDef = new Scanner(symDefFile);
 
     String currentLine = "";
-    String newElement = "";
+    //String newElement = ""; // not used
     String newSymbol = "";
     String symAttributes = "";
     String elData = "";
@@ -727,15 +727,17 @@ public class translate2geda {
           + SymbolText.symDefAttributeString(textXOffset, 0, attr);
     }
 
-    newSymbol = "v 20110115 1"
-        + newElement; // we have created the header for the symbol
-    newElement = "";
+    newSymbol = "v 20110115 1"; // don;t need newElement
+        //        + newElement; // we have created the header for the symbol
+    //newElement = ""; //not used
     
+    xOffset = 0;
+
     // we can now put the pieces of the BXL defined symbol together
     elName = "symDefSymbol.sym";
     elData = newSymbol   // we now add pins to the
-        + newPinList.toString(0,-yOffset) // the header, and then
-        + "\n" + newPinList.boundingBox(0,0).toString(0,-yOffset)
+        + newPinList.toString(xOffset,-yOffset) // the header, and then
+        + "\n" + newPinList.boundingBox(0,0).toString(xOffset,-yOffset)
         + symAttributes; // the final attributes
 
     // we now write the element to a file
@@ -751,8 +753,8 @@ public class translate2geda {
     File input = new File(spiceFile);
     Scanner inputAsc = new Scanner(input);
     String currentLine = "";
-    String newElement = "";
-    String newSymbol = "";
+    //    String newElement = ""; // unused
+    //String newSymbol = ""; // unused
     String newSchematic = "";
     String symAttributes = "";
     // now we trim the .asc file ending off:
@@ -760,14 +762,29 @@ public class translate2geda {
     long xOffset = 40000; // to centre things a bit in gschem
     long yOffset = 40000; // to centre things a bit in gschem
     boolean extractedSchematic = false;
-    int lineCount = 0;
+    //int lineCount = 0; //unused
+
+    long lastX = 0;
+    long lastY = 0;
 
     // we start build a gschem schematic
     newSchematic = "v 20110115 1";
 
     while (inputAsc.hasNext() && !extractedSchematic) {
       currentLine = inputAsc.nextLine().trim();
-      if (currentLine.startsWith("WIRE")) {
+      if (currentLine.startsWith("SYMATTR")) {
+        String[] tokens = currentLine.split(" ");
+        if ("InstName".equals(tokens[1])) {
+          symAttributes = "refdes=" + tokens[2];
+          SymbolText.resetSymbolTextAttributeOffsets();
+          newSchematic = newSchematic
+              + "\n{"
+              + SymbolText.LTSpiceRefdesString(lastX,
+                                               lastY,
+                                               symAttributes)
+              + "\n}";
+        }
+      } else if (currentLine.startsWith("WIRE")) {
         SymbolNet wire = new SymbolNet(currentLine);
         newSchematic = newSchematic
             + "\n"
@@ -836,6 +853,8 @@ public class translate2geda {
             //currentLine = inputAsc.nextLine().trim();
           //          if (!currentLine.startsWith("[")) {
           //            }
+            lastX = xOffset + xCoord;
+            lastY = yOffset + yCoord;// for use with attributes, if any
       }
     }
     // we can now finalise the gschem schematic
@@ -855,7 +874,7 @@ public class translate2geda {
     File input = new File(IBISFile);
     Scanner inputIBIS = new Scanner(input);
     String currentLine = "";
-    String newElement = "";
+    //String newElement = ""; // not used
     String newSymbol = "";
     String symAttributes = "";
     String FPName = "DefaultFPName";
@@ -879,7 +898,7 @@ public class translate2geda {
           if (!currentLine.startsWith("[")) {
             // the pin mapping info ends at the next [] marker
             pins = new PinList(0); // slots = 0
-            boolean lastLine = false;
+            //boolean lastLine = false; //unused
             while (inputIBIS.hasNext() &&
                    !extractedSym) {
               // we make sure it isn't a comment line, i.e. "|" prefix
@@ -997,8 +1016,8 @@ public class translate2geda {
         newElement = ""; // reset the variable for batch mode
 
       } else if (currentLine.startsWith("Symbol ")) {
-        String [] tokens = currentLine.split(" ");
-        String SymbolName = tokens[1].replaceAll("[\"]","");
+        //String [] tokens = currentLine.split(" "); //unused
+        //String SymbolName = tokens[1].replaceAll("[\"]","");// unused
         List<String> silkFeatures = new ArrayList<String>();
         List<String> attributeFields = new ArrayList<String>();
         pins = new PinList(0); // slots = 0

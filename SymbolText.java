@@ -230,6 +230,30 @@ public class SymbolText extends SymbolElement
     return attributeString(xOffset, yOffset, extract);
   }
 
+  public static String LTSpiceRefdesString(long xOffset, long yOffset, String attribute) {
+    if (!attribute.startsWith("refdes=")) {
+      attribute = "refdes=" + attribute;
+    }
+    int colorIndex = 5;
+    int textSize = 10;
+    int fieldVis = 1;
+    int attrVis = 1;
+    int textAngle = 0;
+    int textAlignment = 0;
+    int numLines = 1;
+    return ("\nT "
+            + (maxTextX + xOffset) + " " 
+            + (maxTextY + yOffset) + " " 
+            + colorIndex + " "
+            + textSize + " "
+            + fieldVis + " " // visibility on = 1
+            + attrVis + " " // "0 " //attribute visibility off
+            + textAngle + " " // not rotated = 0 
+            + textAlignment + " " //default value
+            + numLines + "\n"
+            + attribute );
+  }
+
   public static String attributeString(long xOffset, long yOffset, String attribute) {
     long annotationTextYIncrement = 110;
     maxTextY += annotationTextYIncrement;

@@ -54,6 +54,7 @@ Issues:
 - pin mappings in other EDA suites do not necessarily conform to gEDA guidelines, but replacing the pin mappings with non-text, i.e. numbers, risks a loss of information and the introduction of errors - an aim is to minimise information loss as much as possible during conversion.
 - trapezoidal pads in Kicad and polygonal pads in Eagle are not supported yet, but work is underway to convert them to gEDA PCB compatible features.
 - Eagle is very flexible in how it defines "slots", and a relatively foolproof way of converting Eagle "gates" into geda "slots" eludes me for now.
+- LTSpice components have their position and refdes converted, but component values are not yet ported
 
 Usage:
 
@@ -76,7 +77,8 @@ To do:
 - flagging +/- optional enforcement of desired symbol pin spacing
 - option for numerical pin mapping to be applied, over-riding source text based pin mappings
 - summary file generation
-- copying all of the attributes for each component described within the LT-Spice .asc file to the components in the converted gschem schematic file.
+- copying component values described within the LT-Spice .asc file to the components in the converted gschem schematic file.
+- improve the aesthetics of the placement of the ported LTSpice refdes vs the symbol
 
 How to generate additional LT-Spice compatible symbols:
 
