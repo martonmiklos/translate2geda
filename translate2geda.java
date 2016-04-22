@@ -995,7 +995,7 @@ public class translate2geda {
       currentLine = safelyTrim(lastline); // when using gcj libs
       if (currentLine.startsWith("PadStack")) {
           newElement = currentLine;
-          while (textBXL.hasNext() && (lastline != null) &&
+          while (textBXL.hasNextLine() && (lastline != null) &&
                  !currentLine.startsWith("EndPadStack")) {
             lastline = textBXL.nextLine();//make nextLine() null safe 
             currentLine = safelyTrim(lastline); // when using gcj libs
@@ -1006,7 +1006,7 @@ public class translate2geda {
       } else if (currentLine.startsWith("Pattern ")) {
         String [] tokens = currentLine.split(" ");
         String FPName = tokens[1].replaceAll("[\"]","");
-        while (textBXL.hasNext() && (lastline != null) &&
+        while (textBXL.hasNextLine() && (lastline != null) &&
                !currentLine.startsWith("EndPattern")) {
           lastline = textBXL.nextLine();// making nextLine() null safe 
           currentLine = safelyTrim(lastline); // when using gcj libs
@@ -1048,7 +1048,7 @@ public class translate2geda {
         List<String> silkFeatures = new ArrayList<String>();
         List<String> attributeFields = new ArrayList<String>();
         pins = new PinList(0); // slots = 0
-        while (textBXL.hasNext() && (lastline != null) &&
+        while (textBXL.hasNextLine() && (lastline != null) &&
                !currentLine.startsWith("EndSymbol")) {
           lastline = textBXL.nextLine();// making nextLine() null safe 
           currentLine = safelyTrim(lastline); // when using gcj libs
@@ -1105,7 +1105,7 @@ public class translate2geda {
         // we now parse the other attributes for the component
         String [] tokens = currentLine.split(" ");
         String symbolName = tokens[1].replaceAll("[\"]","");
-        while (textBXL.hasNext() && (lastline != null) &&
+        while (textBXL.hasNextLine() && (lastline != null) &&
                !currentLine.startsWith("EndComponent")) {
           lastline = textBXL.nextLine();// making nextLine() null safe 
           currentLine = safelyTrim(lastline); // when using gcj libs
