@@ -122,8 +122,7 @@ public class SymbolPolyline extends SymbolElement
   public String toString(long xOffset, long yOffset) {
     int colorIndex = 3;
     for (int index = 0; index < (vertices - 1); index++) {
-      output = (output
-                + "L "
+      output = ("L "
                 + (xCoords[index] + xOffset) + " "
                 + (yCoords[index] + yOffset) + " " 
                 + (xCoords[index+1] + xOffset) + " "
