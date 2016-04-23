@@ -60,6 +60,7 @@ public class SymbolPolyline extends SymbolElement
   }
   
   public void populateBXLElement(String BXLLine) {
+    output = ""; // blow away the default message
     BXLLine = BXLLine.replaceAll("[\"(),]","");
     String [] tokens = BXLLine.split(" ");
     for (int index = 0; index < tokens.length; index++) {
@@ -93,6 +94,7 @@ public class SymbolPolyline extends SymbolElement
 
   public void constructor(String arg)
   {
+    output = ""; // blow away the default message
     polylineDescriptor = arg;
     arg = arg.replaceAll("    "," ");
     arg = arg.replaceAll("   "," ");
@@ -122,7 +124,7 @@ public class SymbolPolyline extends SymbolElement
   public String toString(long xOffset, long yOffset) {
     int colorIndex = 3;
     for (int index = 0; index < (vertices - 1); index++) {
-      output = ("L "
+      output = (output + "L "
                 + (xCoords[index] + xOffset) + " "
                 + (yCoords[index] + yOffset) + " " 
                 + (xCoords[index+1] + xOffset) + " "
