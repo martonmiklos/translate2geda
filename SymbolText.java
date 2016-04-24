@@ -230,6 +230,13 @@ public class SymbolText extends SymbolElement
     return attributeString(xOffset, yOffset, extract);
   }
 
+  // should get away with the same static code as LTSpice.
+  public static String QUCSRefDesString(long xOffset,
+                                        long yOffset,
+                                        String attribute) {
+    return LTSpiceRefdesString(xOffset, yOffset, attribute);
+  }
+
   public static String LTSpiceRefdesString(long xOffset, long yOffset, String attribute) {
     if (!attribute.startsWith("refdes=")) {
       attribute = "refdes=" + attribute;

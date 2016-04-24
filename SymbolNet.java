@@ -52,6 +52,9 @@ public class SymbolNet extends SymbolElement
   int netColor = 4;
 
   double LTSpiceScalingFactor = 12.5;
+  // some QUCS is on 10 spaced grids, most is on 20 spaced grids
+  // with devices ~60 units long/high
+  double QUCSScalingFactor = 10;
 
   public SymbolNet()
   {
@@ -73,11 +76,31 @@ public class SymbolNet extends SymbolElement
   public SymbolNet(String descriptor) {
     if (descriptor.startsWith("WIRE")) { // can extend for other formats
       LTSconstructor(descriptor);
+    } else {
+      QUCSconstructor(descriptor);
     }
   }
 
+  public void QUCSconstructor(String arg) // takes QUCS wire descriptor
+  {
+    netDescriptor = arg;
+    arg = arg.replaceAll("  "," ");
+    arg = arg.replaceAll("<","");
+    String[] tokens = arg.split(" ");    
+    xCoordOne = QUCSScale(Integer.parseInt(tokens[0]));
+    yCoordOne = QUCSScale(-Integer.parseInt(tokens[1]));
+    xCoordTwo = QUCSScale(Integer.parseInt(tokens[2]));
+    yCoordTwo = QUCSScale(-Integer.parseInt(tokens[3]));
+    super.updateXdimensions(xCoordOne);
+    super.updateYdimensions(yCoordOne);
+    super.updateXdimensions(xCoordTwo);
+    super.updateYdimensions(yCoordTwo);
+  }
+
+
+
   public void LTSconstructor(String arg) // takes LTSpice descriptor
-  { // could extend to deal with Eagle or kicad descriptors
+  { // could have others to deal with Eagle or kicad descriptors
     netDescriptor = arg;
     //System.out.println(arg);
     arg = arg.replaceAll("  "," ");
@@ -121,5 +144,10 @@ public class SymbolNet extends SymbolElement
   private long LTSpiceScale(long dimension) {
     return (long)(dimension*LTSpiceScalingFactor);
   } 
+
+  private long QUCSScale(long dimension) {
+    return (long)(dimension*QUCSScalingFactor);
+  } 
+
 
 }

@@ -110,6 +110,13 @@ public class translate2geda {
       } catch (Exception e) {
         defaultFileIOError(e);
       }
+    } else if (filename.endsWith(".sch") ||
+               filename.endsWith(".SCH") ) {
+      try { // NB: gschem also saves as .sch
+        convertedFiles = parseQUCS(filename);
+      } catch (Exception e) {
+        defaultFileIOError(e);
+      }
     } else {
       System.out.println("I didn't recognise a suitable file " +
                          "ending for conversion, i.e..\n" +
@@ -763,6 +770,141 @@ public class translate2geda {
     convertedFiles.add(elName);
     return convertedFiles.toArray(new String[convertedFiles.size()]);
   } 
+
+
+  // schematics:
+  // 1) grid spacings of 20, and as little as 10
+  // 2) most components 60 units high
+  // 3) coord provided is centre of component
+  // 4) rotation CCW +ve, 0 = 0, 1 = 90, 2 = 180, 3= 270
+  // 5) +ve Y is down
+  // qucs files contain components, and nets, which can be turned
+  // into a gschem schematic file
+  private static String [] parseQUCS(String QUCSsch) throws IOException {
+    File input = new File(QUCSsch);
+    Scanner inputQUCS = new Scanner(input);
+    String currentLine = "";
+    //    String newElement = ""; // unused
+    //String newSymbol = ""; // unused
+    String newSchematic = "";
+    String symAttributes = "";
+    // now we trim the .sch file ending off:
+    String schematicName = QUCSsch.substring(0,QUCSsch.length()-4);
+    long xOffset = 40000; // to centre things a bit in gschem
+    long yOffset = 40000; // to centre things a bit in gschem
+    //int lineCount = 0; //unused
+    String lastline = "";
+    long lastX = 0;
+    long lastY = 0;
+
+    // we start build a gschem schematic
+    newSchematic = "v 20110115 1";
+
+    while (inputQUCS.hasNext()
+           && (lastline != null) ) {
+      lastline = inputQUCS.nextLine(); // making nextLine() null safe 
+      currentLine = safelyTrim(lastline); // when using gcj libs
+      if (currentLine.startsWith("<Wires>")) {
+        while (inputQUCS.hasNext()
+               && !currentLine.startsWith("</Wires>")) {
+          lastline = inputQUCS.nextLine(); // try to keep null safe 
+          currentLine = safelyTrim(lastline); // when using gcj libs
+          if (!currentLine.startsWith("</Wires>")) {
+            SymbolNet wire = new SymbolNet(currentLine);
+            newSchematic = newSchematic
+                + "\n"
+                + wire.toString(xOffset, yOffset);
+          }
+        }
+      } else if (currentLine.startsWith("<Components>")) {
+        // could move this code into the Symbol object in due course
+        while (inputQUCS.hasNext()
+               && !currentLine.startsWith("</Components>")) {
+          lastline = inputQUCS.nextLine(); // try to keep null safe 
+          currentLine = safelyTrim(lastline); // when using gcj libs
+          if (!currentLine.startsWith("</Components>")) {
+            String[] tokens = currentLine.split(" ");
+            String elType = tokens[0];
+            String symName = "";
+            //System.out.println("Element type: " + elType);
+
+            // the following is just the first pass
+            // bespoke symbols for QUCS purposes will be needed
+            if (elType.equals("<R")) {
+              symName = "resistor-LTS.sym";
+            } else if (elType.equals("<GND")) {
+              symName = "ground-LTS.sym";
+            } else if (elType.equals("<C")) {
+              symName = "capacitor-LTS.sym";
+            } else if (elType.equals("<L")) {
+              symName = "inductor-LTS.sym";
+            } else if (elType.equals("<Lib")) {
+              if (tokens[1].equals("OP1")) {
+                symName = "opamp-LTS.sym";
+              } else if(tokens[1].equals("D1") 
+                        || tokens[1].equals("D2")) {
+                symName = "diode-LTS.sym";
+              }  
+            } else if (elType.equals("<Diode")) {
+              symName = "diode-LTS.sym";
+            } else if (elType.equals("voltage")) {
+              symName = "voltage-source-LTS.sym";
+            } else if (elType.equals("current")) {
+              symName = "current-source-LTS.sym";
+            } else if (elType.equals("npn")) {
+              symName = "npn-LTS.sym";
+            } else if (elType.startsWith("Opamps")) {
+              symName = "opamp-LTS.sym";
+            } else {
+              symName = "unknown-QUCS.sym";
+            }
+            long xCoord = 0;
+            long yCoord = 0;
+            String rotation = "0";
+            xCoord = (long)(10*Integer.parseInt(tokens[3]));
+            yCoord = (long)(-(10*Integer.parseInt(tokens[4])));
+            String elRotation = tokens[8].replaceAll(">","");
+            //System.out.println("Rotation: " + elRotation);
+            if (elRotation.equals("1")) {
+              rotation = "90";
+            } else if (elRotation.equals("2")) {
+              rotation = "180";
+            } else if (elRotation.equals("3")) {
+              rotation = "270";
+            }
+            newSchematic = newSchematic
+                + "\n"
+                + "C "
+                + (xOffset + xCoord) 
+                + " "
+                + (yOffset + yCoord)
+                + " "
+                + "1" + " "
+                + rotation + " "
+                + "0" + "  " 
+                + symName;
+            lastX = xOffset + xCoord;
+            lastY = yOffset + yCoord;// for use with refdes attribute
+            symAttributes = "refdes=" + tokens[1];
+            SymbolText.resetSymbolTextAttributeOffsets();
+            newSchematic = newSchematic
+                + "\n{"
+                + SymbolText.QUCSRefDesString(lastX,
+                                              lastY,
+                                              symAttributes)
+                + "\n}";
+          }
+        }
+      }
+    }
+    // we can now finalise the gschem schematic
+    String networkName = schematicName + ".gschem.sch";
+    // we now write the converted schematic data to a file
+    elementWrite(networkName, newSchematic);
+    String [] returnedFilename = {networkName};
+    return returnedFilename;
+  }
+
 
   // LTSpice files contain components, and nets, which can be turned
   // into a gschem schematic file
