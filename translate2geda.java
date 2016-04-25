@@ -840,7 +840,13 @@ public class translate2geda {
               symName = "inductor-QUCS.sym";
             } else if (elType.equals("<Lib")) {
               if (tokens[1].startsWith("OP")) {
-                symName = "opamp-LTS.sym";
+                //System.out.println("op amp!... tokens[9]:"
+                // + tokens[9]);
+                if (tokens[9].equals("\"Ideal\"")) {
+                  symName = "ideal-opamp-QUCS.sym";
+                } else { // if (tokens[9].startsWith("\"Ideal")) {
+                  symName = "opamp-QUCS.sym";
+                }
               } else if(tokens[1].startsWith("D_")
                         || ((tokens[1].length() == 2) 
                             && tokens[1].startsWith("D"))) {
@@ -893,8 +899,6 @@ public class translate2geda {
               symName = "current-source-QUCS.sym";
             } else if (elType.equals("npn")) {
               symName = "npn-LTS.sym";
-            } else if (elType.startsWith("Opamps")) {
-              symName = "opamp-LTS.sym";
             } else {
               symName = "unknown-" + elType + "-QUCS.sym";
             }
@@ -921,7 +925,7 @@ public class translate2geda {
                 + " "
                 + "1" + " "
                 + rotation + " "
-                + "0" + "  " 
+                + "0" + " " 
                 + symName;
             lastX = xOffset + xCoord;
             lastY = yOffset + yCoord;// for use with refdes attribute
@@ -1048,7 +1052,7 @@ public class translate2geda {
                 + " "
                 + "1" + " "
                 + rotation + " "
-                + "0" + "  " 
+                + "0" + " " 
                 + symName;
             // will need to process "SYMATTR" here in due course
             //        while (inputAsc.hasNext() &&
