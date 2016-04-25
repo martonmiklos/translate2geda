@@ -839,14 +839,54 @@ public class translate2geda {
             } else if (elType.equals("<L")) {
               symName = "inductor-QUCS.sym";
             } else if (elType.equals("<Lib")) {
-              if (tokens[1].equals("OP1")) {
+              if (tokens[1].startsWith("OP")) {
                 symName = "opamp-LTS.sym";
-              } else if(tokens[1].equals("D1") 
-                        || tokens[1].equals("D2")) {
-                symName = "diode-LTS.sym";
-              }  
+              } else if(tokens[1].startsWith("D_")
+                        || ((tokens[1].length() == 2) 
+                            && tokens[1].startsWith("D"))) {
+                symName = "diode-QUCS.sym";
+              } else if(tokens[1].startsWith("LP1")
+                        || tokens[1].startsWith("LP2")) {
+                symName = "low-pass-filter-QUCS.sym";
+              } else if(tokens[1].startsWith("BP2")) {
+                symName = "band-pass-filter-QUCS.sym";
+              } else if(tokens[1].startsWith("N2F")) {
+                symName = "notch-filter-QUCS.sym";
+              } else if(tokens[1].startsWith("HP1")
+                        || tokens[1].startsWith("HP2")) {
+                symName = "high-pass-filter-QUCS.sym";
+              } else if(tokens[1].startsWith("AP1F")
+                        || tokens[1].startsWith("AP2F")) {
+                symName = "all-pass-filter-QUCS.sym";
+              } else if(tokens[1].startsWith("LIM")) {
+                if (tokens[11].startsWith("Hard")) {
+                  symName = "hard-limiter-QUCS.sym";
+                } else {
+                  symName = "limiter-QUCS.sym";
+                }
+              } else if(tokens[1].startsWith("SQRT")) {
+                symName = "square-root-QUCS.sym";
+              } else if(tokens[1].startsWith("QNT")) {
+                symName = "quantiser-QUCS.sym";
+              } else if(tokens[1].startsWith("DIFF")) {
+                symName = "differentiator-QUCS.sym";
+              } else if(tokens[1].startsWith("DLY")) {
+                symName = "Vdelay-QUCS.sym";
+              } else if(tokens[1].startsWith("INT")) {
+                symName = "integrator-QUCS.sym";
+              } else if(tokens[1].startsWith("ABS")) {
+                symName = "Abs-QUCS.sym";
+              } else if(tokens[1].startsWith("MUL")) {
+                symName = "multiplier-QUCS.sym";
+              } else if(tokens[1].startsWith("VADD")) {
+                symName = "VSum-QUCS.sym";
+              } else if(tokens[1].startsWith("VSUB")) {
+                symName = "VSub-QUCS.sym";
+              } else {
+                symName = "unknown-QUCS-Lib-" + tokens[1] + ".sym";
+              }
             } else if (elType.equals("<Diode")) {
-              symName = "diode-LTS.sym";
+              symName = "diode-QUCS.sym";
             } else if (elType.equals("voltage")) {
               symName = "voltage-source-QUCS.sym";
             } else if (elType.equals("current")) {
@@ -856,7 +896,7 @@ public class translate2geda {
             } else if (elType.startsWith("Opamps")) {
               symName = "opamp-LTS.sym";
             } else {
-              symName = "unknown-QUCS.sym";
+              symName = "unknown-" + elType + "-QUCS.sym";
             }
             long xCoord = 0;
             long yCoord = 0;
@@ -979,7 +1019,7 @@ public class translate2geda {
             } else if (elType.startsWith("Opamps")) {
               symName = "opamp-LTS.sym";
             } else {
-              symName = "unknown-LTS.sym";
+              symName = "unknown-" + elType + "-LTS.sym";
             }
             long xCoord = 0;
             long yCoord = 0;
