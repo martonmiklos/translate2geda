@@ -8,7 +8,7 @@ A utility for converting:
 - gschem symdef (working), and
 - BSDL (.bsd) (working)
 - LT-Spice (.asc) (working)
-- QUCS (.sch) (nets being converted, and preliminary symbol support)
+- QUCS (.sch) (nets convert, and preliminary symbol support working)
 
 symbols and footprints and LT-Spice schematics and QUCS schematics to geda compatible formats.
 
@@ -45,7 +45,7 @@ Eagle can specify polygons in footprint definitions, which are not supported in 
 
 LT-Spice has +ve Y down, unlike gschem. Rotation is in the opposite direction to gschem. The grid in LT-Spice increase in mutiples of 16, and a conversion factor of 12.5 achieves pin spacings which are multiples of 100, and suited to gschem. For the WIREs in LT-Spice to connect properly in the converted gschem schematic, custom gschem symbols have been generated which match the dimensions and pinouts of the default LT-Spice components. These end in -LTS.sym, and need to be in the default search path of gschem when gschem is used to view and edit the converted schematic.
 
-QUCs has +ve Y down, unlike gschem. Rotation is +ve CCW. Grid increments are in units of 10, and most symbols have pin spacings of 60, allowing for a magnification factor of 10 to be applied. Custom symbols will be needed, as with LT-Spice. 
+QUCs has +ve Y down, unlike gschem. Rotation is +ve CCW. Grid increments are in units of 10, and most symbols have pin spacings of 60, allowing for a magnification factor of 10 to be applied. Custom symbols also need to be installed in the gschem search path, as with LT-Spice. 
 
 Disclaimer:
 
@@ -74,7 +74,7 @@ The utility will use the file ending of the provided file (.symdef, .mod, .lib, 
 To do:
 
 - open JSON format conversion
-- custom symbols to suit QUCS schematic import
+- additional custom symbols to suit QUCS and LT-Spice schematic import
 - Kicad import/export
 - Kicad trapezoidal pad support
 - Eagle polygons

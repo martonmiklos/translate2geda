@@ -831,13 +831,13 @@ public class translate2geda {
             // the following is just the first pass
             // bespoke symbols for QUCS purposes will be needed
             if (elType.equals("<R")) {
-              symName = "resistor-LTS.sym";
+              symName = "resistor-QUCS.sym";
             } else if (elType.equals("<GND")) {
-              symName = "ground-LTS.sym";
+              symName = "ground-QUCS.sym";
             } else if (elType.equals("<C")) {
-              symName = "capacitor-LTS.sym";
+              symName = "capacitor-QUCS.sym";
             } else if (elType.equals("<L")) {
-              symName = "inductor-LTS.sym";
+              symName = "inductor-QUCS.sym";
             } else if (elType.equals("<Lib")) {
               if (tokens[1].equals("OP1")) {
                 symName = "opamp-LTS.sym";
@@ -848,9 +848,9 @@ public class translate2geda {
             } else if (elType.equals("<Diode")) {
               symName = "diode-LTS.sym";
             } else if (elType.equals("voltage")) {
-              symName = "voltage-source-LTS.sym";
+              symName = "voltage-source-QUCS.sym";
             } else if (elType.equals("current")) {
-              symName = "current-source-LTS.sym";
+              symName = "current-source-QUCS.sym";
             } else if (elType.equals("npn")) {
               symName = "npn-LTS.sym";
             } else if (elType.startsWith("Opamps")) {
@@ -885,7 +885,11 @@ public class translate2geda {
                 + symName;
             lastX = xOffset + xCoord;
             lastY = yOffset + yCoord;// for use with refdes attribute
-            symAttributes = "refdes=" + tokens[1];
+            if (tokens[1].equals("*")) {
+              symAttributes = "refdes=GND";
+            } else {
+              symAttributes = "refdes=" + tokens[1];
+            }
             SymbolText.resetSymbolTextAttributeOffsets();
             newSchematic = newSchematic
                 + "\n{"
