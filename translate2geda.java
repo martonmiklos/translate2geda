@@ -839,12 +839,18 @@ public class translate2geda {
             } else if (elType.equals("<L")) {
               symName = "inductor-QUCS.sym";
             } else if (elType.equals("<Lib")) {
-              if (tokens[1].startsWith("OP")) {
+              if (tokens[1].startsWith("LM3886")) {
+                symName = "LM3886-opamp-QUCS.sym";
+              } else if (tokens[1].startsWith("AD825")) {
+                symName = "AD825-opamp-QUCS.sym";
+              } else if (tokens[1].startsWith("OP")) {
                 //System.out.println("op amp!... tokens[9]:"
                 // + tokens[9]);
                 if (tokens[9].equals("\"Ideal\"")) {
                   symName = "ideal-opamp-QUCS.sym";
-                } else { // if (tokens[9].startsWith("\"Ideal")) {
+                } else if (tokens[11].startsWith("\"uA741")) {
+                  symName = "medium-opamp-QUCS.sym";
+                } else {
                   symName = "opamp-QUCS.sym";
                 }
               } else if(tokens[1].startsWith("D_")
