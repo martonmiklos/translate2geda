@@ -1,7 +1,7 @@
 # translate2geda
 A utility for converting:
 
-- Kicad (.mod, .lib) (refactoring currently in progress)
+- Kicad (.mod, .lib) (refactoring in progress, please use kicadModule2geda or kicadSymbol2geda)
 - Eagle (.lbr) (mostly working, minus polygons)
 - BXL (.bxl) (working)
 - IBIS (.ibs) (working)
@@ -103,17 +103,18 @@ The converted schematic is then loaded, after changing "unknown-LTS.sym" to the 
 
 Reload gschem to view the converted schematic, and if all is well, you now have a matching gschem symbol. Ideally, translate2geda.java should be modified and recompiled to recognise the new symbol, to automate things subsequently.
 
-A similar process can be used to generate new symbols for shcematics exported from QUCS.
+A similar process can be used to generate new symbols for schematics exported from QUCS.
 
 How to build a native binary with gcj:
 
-This has now been achieved. The gnu gcj compiler is less permissive than the usual jdk javac, and the use of hasNext() in the gjc library behaves differently to that in the standard jdk libraries, and can return TRUE but then lead to a null when nestLine() is called, which then cause subsequent null pointer exceptions when trim() or split() are called. Modifications to the code have been made to deal with this difference, namely, hasNextLine() is now used instead.
+This has now been achieved. The gnu gcj compiler is less permissive than the usual jdk javac, and the use of hasNext() in the gjc library behaves differently to that in the standard jdk libraries, and can return TRUE but then lead to a null when nextLine() is called, which then cause subsequent null pointer exceptions when trim() or split() are called. Modifications to the code have been made to deal with this difference, namely, hasNextLine() is now used instead.
 
 To compile a native binary, perhaps because you want to use it compactly in a cgi application:
 
 	sudo apt-get install gcj-jdk
 	gcj -I src -C *.java
 	gcj -I src --main=translate2geda *.class -o testing.out
+	./testing someThingToConvert.file
 
 This has been tested successfully on:
 
