@@ -982,6 +982,8 @@ public class translate2geda {
     // we start build a gschem schematic
     newSchematic = "v 20110115 1";
 
+    String symbolAttributeSet = null;
+
     while (inputAsc.hasNext()
            && (lastline != null) ) {
       lastline = inputAsc.nextLine(); // making nextLine() null safe 
@@ -991,12 +993,31 @@ public class translate2geda {
         if ("InstName".equals(tokens[1])) {
           symAttributes = "refdes=" + tokens[2];
           SymbolText.resetSymbolTextAttributeOffsets();
-          newSchematic = newSchematic
-              + "\n{"
-              + SymbolText.LTSpiceRefdesString(lastX,
-                                               lastY,
-                                               symAttributes)
-              + "\n}";
+          if (symbolAttributeSet == null) {
+            symbolAttributeSet = "\n{"
+                + SymbolText.LTSpiceRefdesString(lastX,
+                                                 lastY,
+                                                 symAttributes);
+          } else {
+            symbolAttributeSet = symbolAttributeSet
+                + SymbolText.LTSpiceRefdesString(lastX,
+                                                 lastY,
+                                                 symAttributes);
+          }
+        }
+        if ("Value".equals(tokens[1])) {
+          symAttributes = "value=" + tokens[2];
+          if (symbolAttributeSet == null) {
+            symbolAttributeSet = "\n{"
+                + SymbolText.LTSpiceRefdesString(lastX,
+                                                 lastY,
+                                                 symAttributes);
+          } else {
+            symbolAttributeSet = symbolAttributeSet
+                + SymbolText.LTSpiceRefdesString(lastX,
+                                                 lastY,
+                                                 symAttributes);
+          }
         }
       } else if (currentLine.startsWith("WIRE")) {
         SymbolNet wire = new SymbolNet(currentLine);
@@ -1005,7 +1026,13 @@ public class translate2geda {
             + wire.toString(xOffset, yOffset);
       } else if (currentLine.startsWith("SYMBOL")
                  || currentLine.startsWith("FLAG")) {
-        // we'll move this code into the Symbol object in due course
+          // ? move this code into the Symbol object in due course
+          if (symbolAttributeSet != null ) { // hmm, onto next symbol
+            newSchematic = newSchematic
+                + symbolAttributeSet
+                + "\n}"; // so we finish off the last one's attributes
+          }
+            symbolAttributeSet = null; // reset this
             currentLine = currentLine.replaceAll("  "," ");
             String[] tokens = currentLine.split(" ");
             String elType = tokens[1];

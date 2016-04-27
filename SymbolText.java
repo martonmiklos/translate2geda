@@ -238,7 +238,16 @@ public class SymbolText extends SymbolElement
   }
 
   public static String LTSpiceRefdesString(long xOffset, long yOffset, String attribute) {
-    if (!attribute.startsWith("refdes=")) {
+    long annotationTextYIncrement = 170;
+    maxTextY += annotationTextYIncrement;
+    // we add a bit of space above the previous visible text fields
+    // before adding the invisible attribute fields to the symbol
+    if (invisibleAttributeCount == 0) {
+      maxTextY += annotationTextYIncrement;
+    }
+    invisibleAttributeCount++;
+    if (!attribute.startsWith("refdes=")
+        && !attribute.startsWith("value=")) {
       attribute = "refdes=" + attribute;
     }
     int colorIndex = 5;

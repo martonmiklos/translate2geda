@@ -29,7 +29,7 @@ IBIS files are similar in that a pin map allows a symbol to be generated.
 
 Recent XML format Eagle .lbr files contain a set of layer definitions, packages (footprints), and symbols, but the pin mapping between symbols and footprints is defined in a "deviceset" section, to allow symbols to map to different packages. This has been dealt with by exporting an individual symbol with a pin mapping for each of the packages supported in the deviceset, with a distinct "\_FOOTPRINTNAME" appended to each of the pin mappings defined in the deviceset, i.e. a symbol with three different pin mappings will result in three different symbols being generated with unique footprint=SPECIFICFP fields.
 
-LT-Spice .asc files are text files exported by LT-Spice and capture the schematic used in LT-Spice for circuit modelling. The .asc file contains "WIRE"s which connect discrete components.
+LT-Spice .asc files are text files exported by LT-Spice and capture the schematic used in LT-Spice for circuit modelling. The .asc file contains "WIRE"s which connect discrete components, references to component symbols, and attributes for the components such as their value and refdes.
 
 Main differences:
 
@@ -57,7 +57,8 @@ Issues:
 - pin mappings in other EDA suites do not necessarily conform to gEDA guidelines, but replacing the pin mappings with non-text, i.e. numbers, risks a loss of information and the introduction of errors - an aim is to minimise information loss as much as possible during conversion.
 - trapezoidal pads in Kicad and polygonal pads in Eagle are not supported yet, but work is underway to convert them to gEDA PCB compatible features.
 - Eagle is very flexible in how it defines "slots", and a relatively foolproof way of converting Eagle "gates" into geda "slots" eludes me for now.
-- LTSpice and QUCS components have their position and refdes converted, but component values are not yet ported
+- LTSpice components have their position, value and refdes converted
+- QUCS components have their position and refdes converted, but component values are not yet ported
 - BXL conversion uses Adaptive Huffman Decoding. This takes a lot of shuffling of nodes within trees. Plan to wander off and make some coffee while it decodes.
 - QUCS compatible symbols included in the symbols directory should have the correct geometry in the converted schematic, but pinouts need to be checked before proceeding to allocate footprints and generating a PCB layout, since QUCS is not very explicit about which physical pin goes where.
 
@@ -83,7 +84,7 @@ To do:
 - flagging +/- optional enforcement of desired symbol pin spacing
 - option for numerical pin mapping to be applied, over-riding source text based pin mappings
 - summary file generation
-- copying component values described within the LT-Spice .asc file to the components in the converted gschem schematic file.
+- copying component values described within the QUCS file to the components in the converted gschem schematic file.
 - improve the aesthetics of the placement of the ported LTSpice refdes vs the symbol
 
 How to generate additional LT-Spice compatible symbols:
