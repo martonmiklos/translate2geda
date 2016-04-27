@@ -237,6 +237,14 @@ public class SymbolText extends SymbolElement
     return LTSpiceRefdesString(xOffset, yOffset, attribute);
   }
 
+  public static String QUCSValueString(long xOffset,
+                                        long yOffset,
+                                        String attribute) {
+    // we subtract 340 to place the value below the refdes
+    // provided by the QUCS  refdes function
+    return LTSpiceRefdesString(xOffset, yOffset -340, attribute);
+  }
+
   public static String LTSpiceRefdesString(long xOffset, long yOffset, String attribute) {
     long annotationTextYIncrement = 170;
     maxTextY += annotationTextYIncrement;

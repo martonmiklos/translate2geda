@@ -826,18 +826,39 @@ public class translate2geda {
             String[] tokens = currentLine.split(" ");
             String elType = tokens[0];
             String symName = "";
+            String valueField = null;
+            int index1 = 0;
+            int index2 = 0;
             //System.out.println("Element type: " + elType);
 
             // the following is just the first pass
             // bespoke symbols for QUCS purposes will be needed
             if (elType.equals("<R")) {
               symName = "resistor-QUCS.sym";
+              index1 = currentLine.indexOf('"');
+              index2 = currentLine.indexOf('"', index1 + 1);
+              if (index1 != -1) {
+                valueField = currentLine.substring(index1+1, index2);
+                valueField = "value=" + valueField.replaceAll(" ", "");
+              }
             } else if (elType.equals("<GND")) {
               symName = "ground-QUCS.sym";
             } else if (elType.equals("<C")) {
               symName = "capacitor-QUCS.sym";
+              index1 = currentLine.indexOf('"');
+              index2 = currentLine.indexOf('"', index1 + 1);
+              if (index1 != -1) {
+                valueField = currentLine.substring(index1+1, index2);
+                valueField = "value=" + valueField.replaceAll(" ", "");
+              }
             } else if (elType.equals("<L")) {
               symName = "inductor-QUCS.sym";
+              index1 = currentLine.indexOf('"');
+              index2 = currentLine.indexOf('"', index1 + 1);
+              if (index1 != -1) {
+                valueField = currentLine.substring(index1+1, index2);
+                valueField = "value=" + valueField.replaceAll(" ", "");
+              }
             } else if (elType.equals("<Lib")) {
               if (tokens[1].startsWith("LM3886")) {
                 symName = "LM3886-opamp-QUCS.sym";
@@ -945,7 +966,15 @@ public class translate2geda {
                 + "\n{"
                 + SymbolText.QUCSRefDesString(lastX,
                                               lastY,
-                                              symAttributes)
+                                              symAttributes);
+            if (valueField != null) {
+              newSchematic = newSchematic // it will be a touch lower
+                  + SymbolText.QUCSValueString(lastX, // vs. refdes
+                                               lastY,
+                                               valueField);
+              valueField = null;
+            }
+            newSchematic = newSchematic
                 + "\n}";
           }
         }

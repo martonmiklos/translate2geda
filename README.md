@@ -31,6 +31,8 @@ Recent XML format Eagle .lbr files contain a set of layer definitions, packages 
 
 LT-Spice .asc files are text files exported by LT-Spice and capture the schematic used in LT-Spice for circuit modelling. The .asc file contains "WIRE"s which connect discrete components, references to component symbols, and attributes for the components such as their value and refdes.
 
+QUCS .sym files are text files exported by QUCS (Quite Universal Circuit Simulator) and capture the schematic used in QUCS for circuit modelling. The .sch file contains "WIRE"s which connect discrete components, references to component symbols, and attributes for the components such as their value and refdes.
+
 Main differences:
 
 X and Y coordinate systems are the same in gEDA and Kicad, with Y +ve downwards, but Kicad uses +ve CW rotation and decidegrees for arcs and circles.
@@ -57,8 +59,8 @@ Issues:
 - pin mappings in other EDA suites do not necessarily conform to gEDA guidelines, but replacing the pin mappings with non-text, i.e. numbers, risks a loss of information and the introduction of errors - an aim is to minimise information loss as much as possible during conversion.
 - trapezoidal pads in Kicad and polygonal pads in Eagle are not supported yet, but work is underway to convert them to gEDA PCB compatible features.
 - Eagle is very flexible in how it defines "slots", and a relatively foolproof way of converting Eagle "gates" into geda "slots" eludes me for now.
-- LTSpice components have their position, value and refdes converted
-- QUCS components have their position and refdes converted, but component values are not yet ported
+- LTSpice components have their position, value and refdes converted.
+- QUCS components have their position and refdes converted, but component values are only ported for resistors, inductors and capacitors.
 - BXL conversion uses Adaptive Huffman Decoding. This takes a lot of shuffling of nodes within trees. Plan to wander off and make some coffee while it decodes.
 - QUCS compatible symbols included in the symbols directory should have the correct geometry in the converted schematic, but pinouts need to be checked before proceeding to allocate footprints and generating a PCB layout, since QUCS is not very explicit about which physical pin goes where.
 
@@ -76,7 +78,6 @@ The utility will use the file ending of the provided file (.symdef, .mod, .lib, 
 To do:
 
 - open JSON format conversion
-- additional custom symbols to suit QUCS and LT-Spice schematic import
 - Kicad import/export
 - Kicad trapezoidal pad support
 - Eagle polygons
@@ -84,7 +85,6 @@ To do:
 - flagging +/- optional enforcement of desired symbol pin spacing
 - option for numerical pin mapping to be applied, over-riding source text based pin mappings
 - summary file generation
-- copying component values described within the QUCS file to the components in the converted gschem schematic file.
 - improve the aesthetics of the placement of the ported LTSpice refdes vs the symbol
 
 How to generate additional LT-Spice compatible symbols:
@@ -102,6 +102,8 @@ A copy of the symbol is then placed in gschem's symbol search path.
 The converted schematic is then loaded, after changing "unknown-LTS.sym" to the new "mynewsymbol-LTS.sym" within the schematic file. If lucky, the new symbol's origin will match that needed for the schematic. If not, take note of the (x,y) offset required to place it properly, and/or any lengthening, shortening or translation of pins required to effect a match, and undertake this again in gschem on the "mynewsymbol-LTS.sym" file, saving it again after modification. This can be tricky, as gschem does not show a symbol placed in the negative portions of the screen, and you will have to drag and drop it off outside of the display area to some extent. Alternatively, the text file can be manually edited.
 
 Reload gschem to view the converted schematic, and if all is well, you now have a matching gschem symbol. Ideally, translate2geda.java should be modified and recompiled to recognise the new symbol, to automate things subsequently.
+
+A similar process can be used to generate new symbols for shcematics exported from QUCS.
 
 How to build a native binary with gcj:
 
