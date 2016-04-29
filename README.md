@@ -113,6 +113,8 @@ How to build a native binary with gcj:
 
 This has now been achieved. The gnu gcj compiler is less permissive than the usual jdk javac, and the use of hasNext() in the gjc library behaves differently to that in the standard jdk libraries, and can return TRUE but then lead to a null when nextLine() is called, which then cause subsequent null pointer exceptions when trim() or split() are called. Modifications to the code have been made to deal with this difference, namely, hasNextLine() is now used instead.
 
+Additional issues relate to gcj's treatment of the "continue" command in code, and also a suspected issue with retained trailing CR control codes in tokenised text, which may also explain the issues with hasNext() described above, and was solved with trim(). 
+
 To compile a native binary, perhaps because you want to use it compactly in a cgi application:
 
 	sudo apt-get install gcj-jdk
