@@ -25,7 +25,7 @@ BXL files are a package and vendor agnostic device description format that inclu
 
 Gerber files are parsed and decoded by code originally written by Phillip Knirsch to render and print gerbers: 
 http://www.wizards.de/phil/java/rs274x.html 
-The code has been modified to generate pins/pads and traces as footprint elements, and now detects inch/mm units. More work needs to be done to convert the gerber parsing routines to long int nanometres, unbreak the graphics exporting, and possibly generate PCB layout files which try to put traces into their own layer, distinct from footprint elements, although the heuristics will be subject to high false positive rates in some cases due to some EDA tools rendering pins/pads/polygons with painted strokes, instead of flashed apertures or polygons.
+The code has been modified to generate pins/pads and traces as footprint elements, and now detects inch/mm units. More work needs to be done to convert the gerber parsing routines to long int nanometres, unbreak the graphics exporting, and possibly generate PCB layout files which try to put traces into their own layer, distinct from footprint elements, although the heuristics will be subject to high false positive rates in some cases due to some EDA tools rendering pins/pads/polygons with painted strokes, instead of flashed apertures or polygons. Gerber elements are individually numbered, so that mouse over actions which show the pin number allow groups of pins to be identified with simple searches in the text .fp file and copied/combined if extracting device footprints from larger gerbers, etc...
 
 BSDL files are boundary surface description language files that include a pin map which can be used to create a symbol.
 
@@ -67,6 +67,7 @@ Issues:
 - QUCS components have their position and refdes converted, but component values are only ported for resistors, inductors and capacitors.
 - BXL conversion uses Adaptive Huffman Decoding. This takes a lot of shuffling of nodes within trees. Plan to wander off and make some coffee while it decodes.
 - QUCS compatible symbols included in the symbols directory should have the correct geometry in the converted schematic, but pinouts need to be checked before proceeding to allocate footprints and generating a PCB layout, since QUCS is not very explicit about which physical pin goes where.
+- gerber conversion is broken if the utility is compiled with the gjc utility to a native binary. 
 
 Usage:
 
