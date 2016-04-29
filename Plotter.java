@@ -241,7 +241,9 @@ class Plotter {
       if ((xcoords[0] == x) && (ycoords[0] == y)) {
         vertexCount = pointCount;
       }
-            System.out.println("Added longPoly points: x : " + x + ", y: " + y);
+      if (DEBUG) {
+        System.out.println("Added longPoly points: x : " + x + ", y: " + y);
+      }
       pointCount++;
       if (pointCount == xcoords.length) {
         long[] newXcoords = new long[xcoords.length * 2];
@@ -595,14 +597,14 @@ class Plotter {
 
 
 
-    //
-    // Here we split up the whole input into pieces to make processing it
-    // much easier. Actually, we do something really nasty here. For the IF
-    // extended command, we read in the file and insert the just read file
-    // directly into out cmdVector. As we hopefully won't encounter this too
-    // often this is a nice hack to do it. Other wise we would have to do
-    // recursive calls which might drain our stack space.
-    //
+//
+// Here we split up the whole input into pieces to make processing it
+// much easier. Actually, we do something really nasty here. For the IF
+// extended command, we read in the file and insert the just read file
+// directly into out cmdVector. As we hopefully won't encounter this too
+// often this is a nice hack to do it. Other wise we would have to do
+// recursive calls which might drain our stack space.
+//
     public void parseInput(String in, int pos) {
         if (DEBUG)
             System.out.println("Debug: Start parsing input.");
@@ -651,6 +653,10 @@ class Plotter {
             // Get the current command from the cmdVector
             cmd = (String) cmdVector.elementAt(pos);
 
+            if (cmd == null) {
+              cmd = "";
+            }
+
             if (DEBUG)
                 System.out.println("Debug: Processing command "+cmd);
 
@@ -668,13 +674,13 @@ class Plotter {
                 }
 
                 pos++;
-                continue;
+                //continue;
             }
 
             // Always skip the dang "*" tokens as they don't interest
             if (cmd.equals("*")) {
                 pos++;
-                continue;
+                //continue;
             }
 
             // Handle eXtended RS-274X command
@@ -742,6 +748,13 @@ class Plotter {
             // Get the current command from the cmdVector
             cmd = (String) cmdVector.elementAt(pos);
 
+            // see if this helps gcj
+            if (cmd == null) {
+              cmd = "";
+            } else {
+              cmd = cmd.trim();
+            } // AND IT DOES!!!!!!! gcj does not trim CR properly
+
             // We came to the end of that eXtended command without problems,
             // so return true.
             if (cmd.equals("%")) {
@@ -773,11 +786,18 @@ class Plotter {
                     int nl = numberLength(cmd, 3);
                     int pd = parseInteger(cmd.substring(3, nl));
                     cmd    = cmd.substring(nl);
+                    if (cmd == null) {
+                      cmd = "";
+                    }
+
 
                     // New circle aperture
                     if (cmd.startsWith("C,")) {
                         ad[pd][0] = CIRCLE;
                         cmd = cmd.substring(2);
+                    }
+                    if (cmd == null) {
+                      cmd = "";
                     }
 
                     // New circle aperture
@@ -785,17 +805,26 @@ class Plotter {
                         ad[pd][0] = RECTANGLE;
                         cmd = cmd.substring(2);
                     }
+                    if (cmd == null) {
+                      cmd = "";
+                    }
 
                     // New circle aperture
                     if (cmd.startsWith("O,")) {
                         ad[pd][0] = OVAL;
                         cmd = cmd.substring(2);
                     }
+                    if (cmd == null) {
+                      cmd = "";
+                    }
 
                     // New circle aperture
                     if (cmd.startsWith("P,")) {
                         ad[pd][0] = POLYGON;
                         cmd = cmd.substring(2);
+                    }
+                    if (cmd == null) {
+                      cmd = "";
                     }
 
                     nl = 1;
@@ -809,12 +838,20 @@ class Plotter {
                 // scape really doesn't matter for pictures here.
                 if (cmd.startsWith("ASAXBY") || cmd.startsWith("ASAYBX")) {
                     cmd = cmd.substring(6);
+                    if (cmd == null) {
+                      cmd = "";
+                    }
+
                 }
 
                 // Parse the format statement, one of the most important
                 // extended commands.
                 if (cmd.startsWith("FS")) {
                     cmd = cmd.substring(2);
+                    if (cmd == null) {
+                      cmd = "";
+                    }
+
 
                     // Decided if we omit leading or trailing zeros
                     if (cmd.startsWith("L")) {
@@ -824,6 +861,10 @@ class Plotter {
                         omitLZeros = false;
                     }
                     cmd = cmd.substring(1);
+                    if (cmd == null) {
+                      cmd = "";
+                    }
+
 
                     // Are we using absolute or relative coordinates
                     if (cmd.startsWith("A")) {
@@ -833,37 +874,64 @@ class Plotter {
                         absolute = false;
                     }
                     cmd = cmd.substring(1);
+                    if (cmd == null) {
+                      cmd = "";
+                    }
+
 
                     // Our parser is clever enough to parse any number after N
                     if (cmd.startsWith("N")) {
                         cmd = cmd.substring(2);
                     }
+                    if (cmd == null) {
+                      cmd = "";
+                    }
+
 
                     // Our parser is clever enough to parse any number after G
                     if (cmd.startsWith("G")) {
                         cmd = cmd.substring(2);
+                        if (cmd == null) {
+                          cmd = "";
+                        }
                     }
 
                     if (cmd.startsWith("X")) {
                         xdigits = parseInteger(cmd.substring(2,3));
                         xlen    = xdigits + parseInteger(cmd.substring(1,2));
                         cmd = cmd.substring(3);
+                        if (cmd == null) {
+                          cmd = "";
+                        }
+
                     }
 
                     if (cmd.startsWith("Y")) {
                         ydigits = parseInteger(cmd.substring(2,3));
                         ylen    = ydigits + parseInteger(cmd.substring(1,2));
                         cmd = cmd.substring(3);
+                        if (cmd == null) {
+                          cmd = "";
+                        }
+
                     }
 
                     // Our parser is clever enough to parse any number after D
                     if (cmd.startsWith("D")) {
                         cmd = cmd.substring(2);
                     }
+                    if (cmd == null) {
+                      cmd = "";
+                    }
+
 
                     // Our parser is clever enough to parse any number after M
                     if (cmd.startsWith("M")) {
                         cmd = cmd.substring(2);
+                        if (cmd == null) {
+                          cmd = "";
+                        }
+
                     }
                 }
 
@@ -872,6 +940,10 @@ class Plotter {
                 if (cmd.startsWith("IF")) {
                     includeFile(cmd.substring(2));
                     cmd = "";
+                    if (cmd == null) {
+                      cmd = "";
+                    }
+
                 }
 
                 // Set layer to clear
@@ -882,6 +954,10 @@ class Plotter {
                       bg.setColor(Color.white); // try
                     }
                     cmd = cmd.substring(3);
+                    if (cmd == null) {
+                      cmd = "";
+                    }
+
                 }
 
                 // Set layer to dark
@@ -892,11 +968,19 @@ class Plotter {
                       bg.setColor(Color.black); // try
                     }
                     cmd = cmd.substring(3);
+                    if (cmd == null) {
+                      cmd = "";
+                    }
+
                 }
 
                 // Darn, didn't know what to do with that command, so lets
                 // just forget about it at the moment... :)
                 cmd = "";
+            }
+            // gcj:
+            if (cmd == null) {
+              cmd = "";
             }
 
             // Advance to next command
@@ -935,6 +1019,13 @@ class Plotter {
             // Get the current command from the cmdVector
             cmd = (String) cmdVector.elementAt(pos);
 
+            // see if this helps with gcj:
+            if (cmd == null) {
+              cmd = "";
+            } else {
+              cmd = cmd.trim();
+            }  // AND IT DOES!!!!!!! gcj does not trim CR properly
+
             // We came to the end of that command without problems,
             // so return true.
             if (cmd.equals("*")) {
@@ -950,7 +1041,7 @@ class Plotter {
             }
 
             if (DEBUG)
-                System.out.println("Debug: Executing normal command "+cmd);
+              System.out.println("Debug: Executing normal command "+ cmd.trim());
 
             // Handle a single command. Might consist of several 'subcommands'
             // like G01X100Y200D02. We simply collect them one after the other
@@ -961,6 +1052,9 @@ class Plotter {
                 if (cmd.startsWith("N")) {
                     int p  = numberLength(cmd, 1);
                     cmd    = cmd.substring(p);
+                    if (cmd == null) {
+                      cmd = "";
+                    }
                 }
 
                 // Switch to linear interpolation with scale 1.0
@@ -968,26 +1062,36 @@ class Plotter {
                     interpol = LINEAR;
                     scale = 1.0;
                     cmd = cmd.substring(3);
+                    if (cmd == null) {
+                      cmd = "";
+                    }
                 }
 
                 // Switch to clockwise interpolation
                 if (cmd.startsWith("G02")) {
                     interpol = CLOCK;
                     cmd = cmd.substring(3);
-                    continue;
+                    if (cmd == null) {
+                      cmd = "";
+                    }
+
+                    //                    continue;
                 }
 
                 // Switch to counter clockwise interpolation
                 if (cmd.startsWith("G03")) {
                     interpol = CCLOCK;
                     cmd = cmd.substring(3);
-                    continue;
+                    if (cmd == null) {
+                      cmd = "";
+                    }
+                    //continue;
                 }
 
                 // Simply a comment :)
                 if (cmd.startsWith("G04")) {
                     cmd = "";
-                    continue;
+                    //continue;
                 }
 
                 // Switch to linear interpolation with scale 10
@@ -996,6 +1100,9 @@ class Plotter {
                     scale = 10.0;
                     cmd = cmd.substring(3);
                 }
+                    if (cmd == null) {
+                      cmd = "";
+                    }
 
                 // Switch to linear interpolation with scale 0.1
                 if (cmd.startsWith("G11")) {
@@ -1003,6 +1110,9 @@ class Plotter {
                     scale = 0.1;
                     cmd = cmd.substring(3);
                 }
+                    if (cmd == null) {
+                      cmd = "";
+                    }
 
                 // Switch to linear interpolation with scale 0.01
                 if (cmd.startsWith("G12")) {
@@ -1010,28 +1120,55 @@ class Plotter {
                     scale = 0.01;
                     cmd = cmd.substring(3);
                 }
+                    if (cmd == null) {
+                      cmd = "";
+                    }
 
                 // Lets do some filled polygons
                 if (cmd.startsWith("G36")) {
                     nareafill = true;
                     points = new Polygon();	// Initialize our Polygon
+                    if (DEBUG) {
+                      System.out.println("G36 cmd: " + cmd
+                                       + ", cmd.substring(3): "
+                                       + cmd.substring(3));
+                    }
                     cmd = cmd.substring(3);
+                    if (cmd == null) {
+                      cmd = "";
+                    }
                 }
 
                 // End area fill
                 if (cmd.startsWith("G37")) {
                     nareafill = false;
+                    if (DEBUG) {
+                      System.out.println("G37 cmd: " + cmd
+                                         + ", cmd.substring(3): "
+                                         + cmd.substring(3));
+                    }
                     cmd = cmd.substring(3);
+                    if (cmd == null) {
+                      cmd = "";
+                    }
                 }
 
                 // Select an aperture, skip it as we don't care :)
                 if (cmd.startsWith("G54")) {
                     cmd = cmd.substring(3);
                 }
+                if (cmd == null) {
+                  cmd = "";
+                }
+
 
                 // Select an aperture, skip it as we don't care :)
                 if (cmd.startsWith("G55")) {
                     cmd = cmd.substring(3);
+                }
+
+                if (cmd == null) {
+                  cmd = "";
                 }
 
                 // All data is now given in inches
@@ -1039,11 +1176,17 @@ class Plotter {
                     metric = false;
                     cmd = cmd.substring(3);
                 }
+                if (cmd == null) {
+                  cmd = "";
+                }
 
                 // All data is now interpreted in millimeters (metric)
                 if (cmd.startsWith("G71")) {
                     metric = true;
                     cmd = cmd.substring(3);
+                }
+                if (cmd == null) {
+                  cmd = "";
                 }
 
                 // Switch to single quadrant (no circular interpolation)
@@ -1051,11 +1194,17 @@ class Plotter {
                     multi = false;
                     cmd = cmd.substring(3);
                 }
+                if (cmd == null) {
+                  cmd = "";
+                }
 
                 // Switch to multi quadrant (circular interpolation)
                 if (cmd.startsWith("G75")) {
                     multi = true;
                     cmd = cmd.substring(3);
+                }
+                if (cmd == null) {
+                  cmd = "";
                 }
 
                 // Switch to absolute coordinate system
@@ -1070,6 +1219,9 @@ class Plotter {
                     }
                     absolute = true;
                     cmd = cmd.substring(3);
+                    if (cmd == null) {
+                      cmd = "";
+                    }
                 }
 
                 // Switch to incremental coordinate system
@@ -1083,12 +1235,18 @@ class Plotter {
                     absolute = false;
                     cmd = cmd.substring(3);
                 }
+                if (cmd == null) {
+                  cmd = "";
+                }
 
                 // Wrooommm... Change X position.
                 if (cmd.startsWith("X")) {
                     int p  = numberLength(cmd, 1);
                     nx     = normalizeX(cmd.substring(1, p));
                     cmd    = cmd.substring(p);
+                    if (cmd == null) {
+                      cmd = "";
+                    }
                     doDraw = true;
                 }
 
@@ -1097,6 +1255,9 @@ class Plotter {
                     int p  = numberLength(cmd, 1);
                     ny     = normalizeY(cmd.substring(1, p));
                     cmd    = cmd.substring(p);
+                    if (cmd == null) {
+                      cmd = "";
+                    }
                     doDraw = true;
                 }
 
@@ -1105,6 +1266,9 @@ class Plotter {
                     int p  = numberLength(cmd, 1);
                     i      = normalizeX(cmd.substring(1, p));
                     cmd    = cmd.substring(p);
+                    if (cmd == null) {
+                      cmd = "";
+                    }
                     doDraw = true;
                 }
 
@@ -1113,6 +1277,9 @@ class Plotter {
                     int p  = numberLength(cmd, 1);
                     j      = normalizeY(cmd.substring(1, p));
                     cmd    = cmd.substring(p);
+                    if (cmd == null) {
+                      cmd = "";
+                    }
                     doDraw = true;
                 }
 
@@ -1124,6 +1291,9 @@ class Plotter {
                     int p  = numberLength(cmd, 1);
                     int nd = parseInteger(cmd.substring(1, p));
                     cmd    = cmd.substring(p);
+                    if (cmd == null) {
+                      cmd = "";
+                    }
 
                     // Switch to new aperture?
                     if (nd >= 10)
@@ -1140,12 +1310,18 @@ class Plotter {
                 if (cmd.startsWith("M00")) {
                     stop = true;
                     cmd = cmd.substring(3);
+                    if (cmd == null) {
+                      cmd = "";
+                    }
                 }
 
                 // Stop! Erhh.. Well, sort of :)
                 if (cmd.startsWith("M02")) {
                     stop = true;
                     cmd = cmd.substring(3);
+                    if (cmd == null) {
+                      cmd = "";
+                    }
                 }
 
                 // Darn, didn't know what to do with that command, so lets
@@ -1153,6 +1329,11 @@ class Plotter {
 
 
                 cmd = "";
+            }
+
+            // for pete's sake, gcj
+            if (cmd == null) {
+              cmd = "";
             }
 
             // If we are in incremental mode, add the old values of x and y
