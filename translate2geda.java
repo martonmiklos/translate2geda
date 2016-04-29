@@ -117,10 +117,33 @@ public class translate2geda {
       } catch (Exception e) {
         defaultFileIOError(e);
       }
+    } else if (filename.endsWith(".gbr") ||
+               filename.endsWith(".GBR") ||
+               filename.endsWith(".gbl") ||
+               filename.endsWith(".GBL") ||
+               filename.endsWith(".gtl") ||
+               filename.endsWith(".GTL") ||
+               filename.endsWith(".gto") ||
+               filename.endsWith(".GTO") ||
+               filename.endsWith(".gbo") ||
+               filename.endsWith(".GBO") ||
+               filename.endsWith(".gbs") ||
+               filename.endsWith(".GBS") ||
+               filename.endsWith(".gts") ||
+               filename.endsWith(".GTS") ||
+               filename.endsWith(".PHO") ||
+               filename.endsWith(".pho") ) {
+      try { // NB: there's a lot of variety here
+        // i.e. .pho, .gm1, .gbo .gbs .gto .gts etc...
+        convertedFiles = parseGerber(filename);
+      } catch (Exception e) {
+        defaultFileIOError(e);
+      }
     } else {
       System.out.println("I didn't recognise a suitable file " +
                          "ending for conversion, i.e..\n" +
-                         "\t.bxl, .bsd, .ibs, .symdef, .asc" );
+                         "\t.bxl, .bsd, .ibs, .symdef, .asc, .sch, " +
+                         ".gbr");
     }
 
     if (convertedFiles != null &&
@@ -1213,6 +1236,40 @@ public class translate2geda {
     elementWrite(elName, elData);
     String [] returnedFilename = {elName};
     return returnedFilename;
+  }
+
+  // we use a modified version of Phillip Knirsch's gerber
+  // parser/plotter code from the turn of the century
+  // http://www.wizards.de/phil/java/rs274x.html
+  // this routine exports a PCB footprint version of the gerber file
+  // It still needs a bit of work, i.e. 
+  // - arcs might be a bit broken
+  // - a bit verbose with polygon processing
+  // - only exports a footprint, not a layout file
+  // - would need heuristics for pin/pad vs wire/trace detection
+  // - this is tricky though due to naughty EDAs painting some features
+  //   instead of flashing
+  private static String [] parseGerber(String gerberFile)
+    throws IOException {
+    File input = new File(gerberFile);
+    Scanner gerberData = new Scanner(input);
+    String gerbText = "";
+    while (gerberData.hasNextLine()) {
+      gerbText = gerbText + gerberData.nextLine();
+    }
+    Plotter gerberPlotter = new Plotter();
+    gerberPlotter.setScale(1.0, 1.0);
+    gerberPlotter.setSize(800, 640); // might make it behave
+    String [] retString = new String [1];
+    try {
+      gerberPlotter.generatePCBFile(gerbText,gerberFile);
+      retString[0] = gerberFile + ".fp";
+    }
+    catch (Exception e) {
+      retString[0] = "Error: Gerber plotter unable to parse file.";
+      defaultFileIOError(e);
+    }
+    return retString;
   }
 
   private static void textOnlyBXL(String BXLFile) {

@@ -9,8 +9,9 @@ A utility for converting:
 - BSDL (.bsd) (working)
 - LT-Spice (.asc) (working)
 - QUCS (.sch) (nets convert, and preliminary symbol support working)
+- gerber file (.gbr, .gbo, .gto, .gbs, .gts, .gbl, .gtl, .pho) ... a preliminary implementation
 
-symbols and footprints and LT-Spice schematics and QUCS schematics to geda compatible formats.
+symbols and footprints and LT-Spice schematics and QUCS schematics and gerbers to geda compatible formats.
 
 The Kicad portion of the utility is based on the KicadModuleToGEDA and KicadSymbolToGEDA utilities.
 
@@ -20,8 +21,11 @@ Export to Kicad is planned once conversion functionality is in place and satisfa
 
 Export to Eagle is also planned, as Eagle have been good enough to use an easily parsed XML format.
 
-BXL files are a package and vendor agnostic device description format that includes pad, symbol and footprint definitions 
-in a single binary file encoded with adaptive Huffman encoding. The adaptive Huffman decoding code was ported to Java from vala code originally written by Geert Jordaens.
+BXL files are a package and vendor agnostic device description format that includes pad, symbol and footprint definitions in a single binary file encoded with adaptive Huffman encoding. The adaptive Huffman decoding code was ported to Java from vala code originally written by Geert Jordaens.
+
+Gerber files are parsed and decoded by code originally written by Phillip Knirsch to render and print gerbers: 
+http://www.wizards.de/phil/java/rs274x.html 
+The code has been modified to generate pins/pads and traces as footprint elements, and now detects inch/mm units. More work needs to be done to convert the gerber parsing routines to long int nanometres, unbreak the graphics exporting, and possibly generate PCB layout files which try to put traces into their own layer, distinct from footprint elements, although the heuristics will be subject to high false positive rates in some cases due to some EDA tools rendering pins/pads/polygons with painted strokes, instead of flashed apertures or polygons.
 
 BSDL files are boundary surface description language files that include a pin map which can be used to create a symbol.
 
