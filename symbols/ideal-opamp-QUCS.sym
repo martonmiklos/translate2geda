@@ -40,3 +40,9 @@ pinlabel=OUT
 L -125 150 -125 50 3 0 0 0 -1 -1
 L -175 100 -75 100 3 0 0 0 -1 -1
 L -175 -100 -75 -100 3 0 0 0 -1 -1
+T 300 2400 5 8 0 0 0 0 1
+symversion=1.0
+T 300 2000 5 8 0 0 0 0 1
+dist-license=GPL 3, http://www.gnu.org/licenses/gpl-3.0.txt
+T 300 1800 5 8 0 0 0 0 1
+use-license=free, no restrictions

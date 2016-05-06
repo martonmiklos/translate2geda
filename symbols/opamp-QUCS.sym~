@@ -50,7 +50,7 @@ pintype=pwr
 T 400 200 5 10 0 0 0 0 1
 pinlabel=VCC
 }
-P 400 -200 400 -400 1 0 1
+P 400 -200 400 -450 1 0 1
 {
 T 450 -375 5 8 1 1 0 0 1
 pinnumber=4
@@ -68,9 +68,3 @@ T 150 500 9 8 1 0 0 0 1
 VCC
 T 150 -625 9 8 1 0 0 0 1
 VSS
-T 300 2400 5 8 0 0 0 0 1
-symversion=1.0
-T 300 2000 5 8 0 0 0 0 1
-dist-license=GPL 3, http://www.gnu.org/licenses/gpl-3.0.txt
-T 300 1800 5 8 0 0 0 0 1
-use-license=free, no restrictions

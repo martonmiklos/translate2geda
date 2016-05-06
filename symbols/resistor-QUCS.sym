@@ -40,3 +40,7 @@ pintype=pas
 }
 T 350 300 8 10 1 1 180 0 1
 refdes=R?
+T 300 2000 5 8 0 0 0 0 1
+dist-license=GPL 3, http://www.gnu.org/licenses/gpl-3.0.txt
+T 300 1800 5 8 0 0 0 0 1
+use-license=free, no restrictions
