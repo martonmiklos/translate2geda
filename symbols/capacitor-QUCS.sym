@@ -35,3 +35,7 @@ L -150 0 -50 0 3 0 0 0 -1 -1
 L 50 0 150 0 3 0 0 0 -1 -1
 T 450 375 8 10 1 1 180 0 1
 refdes=C?
+T 300 2000 5 8 0 0 0 0 1
+dist-license=GPL 3, http://www.gnu.org/licenses/gpl-3.0.txt
+T 300 1800 5 8 0 0 0 0 1
+use-license=free, no restrictions
