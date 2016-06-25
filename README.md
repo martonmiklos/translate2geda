@@ -65,7 +65,7 @@ Issues:
 - Eagle is very flexible in how it defines "slots", and a relatively foolproof way of converting Eagle "gates" into geda "slots" eludes me for now.
 - LTSpice components have their position, value and refdes converted.
 - QUCS components have their position and refdes converted, but component values are only ported for resistors, inductors and capacitors.
-- BXL conversion uses Adaptive Huffman Decoding. This takes a lot of shuffling of nodes within trees. Plan to wander off and make some coffee while it decodes.
+- BXL conversion uses Adaptive Huffman Decoding. This takes a lot of shuffling of nodes within trees. You can still wander off and make some coffee while it decodes, but it is much much faster now thanks to better String handling suggested by https://github.com/wlbaker who identified the bottleneck and remedied it.
 - QUCS compatible symbols included in the symbols directory should have the correct geometry in the converted schematic, but pinouts need to be checked before proceeding to allocate footprints and generating a PCB layout, since QUCS is not very explicit about which physical pin goes where.
 
 Usage:
