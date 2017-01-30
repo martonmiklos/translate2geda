@@ -1474,6 +1474,7 @@ public class translate2geda {
       } else if (currentLine.startsWith("Pattern ")) {
         String [] tokens = currentLine.split(" ");
         String FPName = tokens[1].replaceAll("[\"]","");
+	FPName = FPName.replaceAll("[ /]","_"); // seriously, who puts slashes in filenames //
         while (textBXL.hasNextLine() && (lastline != null) &&
                !currentLine.startsWith("EndPattern")) {
           lastline = textBXL.nextLine();// making nextLine() null safe 
@@ -1573,6 +1574,7 @@ public class translate2geda {
         // we now parse the other attributes for the component
         String [] tokens = currentLine.split(" ");
         String symbolName = tokens[1].replaceAll("[\"]","");
+	symbolName = symbolName.replaceAll("[ /]","_"); // c'mon, slashes in filenames? really? //
         while (textBXL.hasNextLine() && (lastline != null) &&
                !currentLine.startsWith("EndComponent")) {
           lastline = textBXL.nextLine();// making nextLine() null safe 
