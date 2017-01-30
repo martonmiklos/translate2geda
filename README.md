@@ -10,8 +10,9 @@ A utility for converting:
 - LT-Spice (.asc) (working)
 - QUCS (.sch) (nets convert, and preliminary symbol support working)
 - gerber file (.gbr, .gbo, .gto, .gbs, .gts, .gbl, .gtl, .pho) ... a preliminary implementation
+- hersheydata.py EggBot font definition files (working)
 
-symbols and footprints and LT-Spice schematics and QUCS schematics and gerbers to geda compatible formats.
+symbols and footprints and LT-Spice schematics and QUCS schematics and gerbers and fonts to geda compatible formats.
 
 The Kicad portion of the utility is based on the KicadModuleToGEDA and KicadSymbolToGEDA utilities.
 
@@ -19,7 +20,7 @@ This utility extends the functionality of the software classes to allow addition
 
 Export to Kicad is planned once conversion functionality is in place and satisfactorily tested. This should not be difficult, since the utility uses nanometres internally and also uses many of the dimensions and flags internally that the Kicad format is based on.
 
-Export to Eagle is also planned, as Eagle have been good enough to use an easily parsed XML format.
+Export to Eagle was planned, as Eagle was good enough to use an easily parsed XML format.
 
 BXL files are a package and vendor agnostic device description format that includes pad, symbol and footprint definitions in a single binary file encoded with adaptive Huffman encoding. The adaptive Huffman decoding code was ported to Java from vala code originally written by Geert Jordaens.
 
@@ -36,6 +37,8 @@ Recent XML format Eagle .lbr files contain a set of layer definitions, packages 
 LT-Spice .asc files are text files exported by LT-Spice and capture the schematic used in LT-Spice for circuit modelling. The .asc file contains "WIRE"s which connect discrete components, references to component symbols, and attributes for the components such as their value and refdes.
 
 QUCS .sym files are text files exported by QUCS (Quite Universal Circuit Simulator) and capture the schematic used in QUCS for circuit modelling. The .sch file contains "WIRE"s which connect discrete components, references to component symbols, and attributes for the components such as their value and refdes.
+
+EggBot hersheydata.py files containing NIST style font definitions are converted into font definitions that are compatible with gEDA PCB/pcb-rnd. The font definitions are printed to the console and need to be captured in a file for subsequent use. There are currently 51 fonts available under either the NIST Hershey Font licence or the SIL Open Font Licence. 
 
 Main differences:
 
@@ -67,6 +70,7 @@ Issues:
 - QUCS components have their position and refdes converted, but component values are only ported for resistors, inductors and capacitors.
 - BXL conversion uses Adaptive Huffman Decoding. This takes a lot of shuffling of nodes within trees. You can still wander off and make some coffee while it decodes, but it is much much faster now thanks to better String handling suggested by https://github.com/wlbaker who identified the bottleneck and remedied it.
 - QUCS compatible symbols included in the symbols directory should have the correct geometry in the converted schematic, but pinouts need to be checked before proceeding to allocate footprints and generating a PCB layout, since QUCS is not very explicit about which physical pin goes where.
+- kerning in converted Eggbot Fonts may need fine tuning.
 
 Usage:
 
@@ -85,7 +89,6 @@ To do:
 - Kicad import/export
 - Kicad trapezoidal pad support
 - Eagle polygons
-- Eagle export
 - flagging +/- optional enforcement of desired symbol pin spacing
 - option for numerical pin mapping to be applied, over-riding source text based pin mappings
 - summary file generation
