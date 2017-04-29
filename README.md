@@ -18,7 +18,7 @@ The Kicad portion of the utility is based on the KicadModuleToGEDA and KicadSymb
 
 This utility extends the functionality of the software classes to allow additional formats to be converted.
 
-Export to Kicad is planned once conversion functionality is in place and satisfactorily tested. This should not be difficult, since the utility uses nanometres internally and also uses many of the dimensions and flags internally that the Kicad format is based on.
+Export to Kicad is planned once conversion functionality is in place and satisfactorily tested. This should not be difficult, since the utility uses nanometres internally and also uses many of the dimensions and flags internally that the Kicad format is based on. KiCad eeschema users needing to extract schematic symbols from BXL files can use the BXL2text utility until the export to KiCad eeschema (.lib) code is integrated into translate2geda.
 
 Export to Eagle was planned, as Eagle was good enough to use an easily parsed XML format.
 
