@@ -7,7 +7,7 @@ A utility for converting:
 - IBIS (.ibs) (working)
 - gschem symdef (working), and
 - BSDL (.bsd) (working)
-- LT-Spice (.asc) (working)
+- LT-Spice (.asc) (working, if .asc file saved in utf-8 text format, not ISO-8859-*)
 - QUCS (.sch) (nets convert, and preliminary symbol support working)
 - gerber file (.gbr, .gbo, .gto, .gbs, .gts, .gbl, .gtl, .pho) ... a preliminary implementation
 - hersheydata.py EggBot font definition files (working)
@@ -34,7 +34,7 @@ IBIS files are similar in that a pin map allows a symbol to be generated.
 
 Recent XML format Eagle .lbr files contain a set of layer definitions, packages (footprints), and symbols, but the pin mapping between symbols and footprints is defined in a "deviceset" section, to allow symbols to map to different packages. This has been dealt with by exporting an individual symbol with a pin mapping for each of the packages supported in the deviceset, with a distinct "\_FOOTPRINTNAME" appended to each of the pin mappings defined in the deviceset, i.e. a symbol with three different pin mappings will result in three different symbols being generated with unique footprint=SPECIFICFP fields.
 
-LT-Spice .asc files are text files exported by LT-Spice and capture the schematic used in LT-Spice for circuit modelling. The .asc file contains "WIRE"s which connect discrete components, references to component symbols, and attributes for the components such as their value and refdes.
+LT-Spice .asc files are text files exported by LT-Spice and capture the schematic used in LT-Spice for circuit modelling. The .asc file contains "WIRE"s which connect discrete components, references to component symbols, and attributes for the components such as their value and refdes. Until the code is updated to cope, use .asc files saved in utf-8 to avoid generating empty .sch files. 
 
 QUCS .sym files are text files exported by QUCS (Quite Universal Circuit Simulator) and capture the schematic used in QUCS for circuit modelling. The .sch file contains "WIRE"s which connect discrete components, references to component symbols, and attributes for the components such as their value and refdes.
 
