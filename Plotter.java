@@ -132,7 +132,7 @@ class Plotter {
 
   // added for centring and PCN element export
 
-    Vector     cmdVector;// Vector containing all single commands and tokens
+    Vector<String>     cmdVector;// Vector containing all single commands and tokens
     int        pos;	// Global position in cmdVector for parser
     boolean    ext;	// Flag wether we are inside an extended command
 
@@ -350,7 +350,7 @@ class Plotter {
         getDim    = false;		// We usually don't calc the dim
         sx        = 1.0;		// Default is 1:1 scaling on X-axis
         sy        = 1.0;		// Default is 1:1 scaling on Y-axis
-	cmdVector = new Vector();	// New command vector
+	cmdVector = new Vector<String>();	// New command vector
 	points    = new Polygon();	// Polygon for area fill
 
         longPoints = new LongPolygon(); // for storing nanometre dimensions and returning centroid
