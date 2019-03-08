@@ -1,5 +1,10 @@
 # translate2geda
-A utility for converting:
+
+Update - March 2019 - refactoring, code cleanup, incorporation of Kicad MOdule and Footprint conversion, and enhanced support for polygons in footprints, padstacks, padstack rotation, arbitrary text features in footprints, arbitrary text rotation, and line elements on top copper in footprints has been effected in the translate2corelEDA utility which exports to pcb-rnd ( see http://repo.hu/projects/pcb-rnd/ ) lihata (.lht) format by default, which natively supports all of these features. The gerber importer has also been improved in translate2coralEDA to support copper arcs and polygons on top copper layer in footprint (aka subcircuit in pcb-rnd) features.
+
+Users are encouraged to upgrade their tool chain to pcb-rnd, which can import Eagle, Kicad, Protel Autotrax, HPGL, Specctra, and gEDA PCB layouts, and save in its fully featured native lihata (.lht) file format, as well as export to various non native formats, subject to the limitations of other formats.
+
+translate2geda, a utility for converting:
 
 - Kicad (.mod, .lib) (refactoring in progress, please use kicadModule2geda or kicadSymbol2geda)
 - Eagle (.lbr) (mostly working, minus polygons)
