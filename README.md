@@ -85,7 +85,7 @@ Install a git client, java virtual machine, and java compiler to suit your opera
 	git clone https://github.com/erichVK5/translate2geda.git
 	cd translate2geda
 	javac *.java
-	java translate2geda someFile.lbr
+	java translate2geda someFile.lbr [-o optional/output/directory/path/including/slashes/]
 
 The utility will use the file ending of the provided file (.symdef, .mod, .lib, .bxl, .ibs, .bsd, etc) to determine which parser is required.
 
