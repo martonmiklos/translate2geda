@@ -32,6 +32,7 @@ import java.util.List;
 public class translate2geda {
 
   static boolean verbose = false;
+  static String outputDir = "";
 
   public static void main (String [] args) {
 
@@ -39,6 +40,7 @@ public class translate2geda {
     boolean quietMode = false;
     String filename = "";
     String [] convertedFiles = null;
+    int argc = 0;
 
     if (args.length == 0) {
       printHelp();
@@ -46,12 +48,15 @@ public class translate2geda {
     } else {
       filename = args[0];
       for (String arg : args) {
+	argc++;
         if (arg.equals("-t")) {
           textOutputOnly = true;
         } else if (arg.equals("-q")){
           quietMode = true;
         } else if (arg.equals("-v")){
           verbose = true;
+        } else if (arg.equals("-o")){
+          outputDir = args[argc];
         }
       }
     }
@@ -268,6 +273,7 @@ public class translate2geda {
                         + "\n#\tMinimum Y coord: " + currentMinY
                         + "\n#\tMaximum Y coord: " + currentMaxY
                         + "\n#\tMaximal Y extent: " + (currentMaxY - currentMinY)
+			+ "\n#\tMaximal X extent: " + (currentMaxX - currentMinX)
                         + "\n#\tY scaling to achieve 6000 centimils: " + scaling
                         + "\n######################################################");
 
@@ -504,7 +510,7 @@ public class translate2geda {
         elName = FPName + ".fp";
         
         // we now write the element to a file
-        elementWrite(elName, elData);
+        elementWrite(outputDir + elName, elData);
         // add the FP to our list of converted elements
         convertedFiles.add(elName); 
         newElement = ""; // reset the variable for batch conversion
@@ -649,7 +655,7 @@ public class translate2geda {
           elName = symbolName + ".sym";
           
           // we now write the element to a file
-          elementWrite(elName, newSymbol);
+          elementWrite(outputDir + elName, newSymbol);
           
           // add the symbol to our list of converted elements
           convertedFiles.add(elName);
@@ -708,7 +714,7 @@ public class translate2geda {
             elName = symbolName + FPField + ".sym";
             
             // we now write the element to a file
-            elementWrite(elName, newSymbol);
+            elementWrite(outputDir + elName, newSymbol);
             
             // add the symbol to our list of converted elements
             convertedFiles.add(elName);
@@ -816,7 +822,7 @@ public class translate2geda {
         elName = symName + ".sym";
 
         // we now write the element to a file
-        elementWrite(elName, elData);
+        elementWrite(outputDir + elName, elData);
         convertedFiles.add(elName);
 
         symAttributes = ""; // reset symbol data if batch processing
@@ -947,7 +953,7 @@ public class translate2geda {
         + symAttributes; // the final attributes
 
     // we now write the element to a file
-    elementWrite(elName, elData);
+    elementWrite(outputDir + elName, elData);
     // add the symbol to our list of converted elements
     convertedFiles.add(elName);
     return convertedFiles.toArray(new String[convertedFiles.size()]);
@@ -1165,7 +1171,7 @@ public class translate2geda {
     // we can now finalise the gschem schematic
     String networkName = schematicName + ".gschem.sch";
     // we now write the converted schematic data to a file
-    elementWrite(networkName, newSchematic);
+    elementWrite(outputDir + networkName, newSchematic);
     String [] returnedFilename = {networkName};
     return returnedFilename;
   }
@@ -1314,7 +1320,7 @@ public class translate2geda {
     // + SymbolText.BXLAttributeString(newPinList.textRHS(),0, FPAttr);
     String networkName = schematicName + ".sch";
     // we now write the converted schematic data to a file
-    elementWrite(networkName, newSchematic);
+    elementWrite(outputDir + networkName, newSchematic);
     String [] returnedFilename = {networkName};
     return returnedFilename;
   }
@@ -1392,7 +1398,7 @@ public class translate2geda {
     String elName = symName + ".sym";
 
     // we now write the element to a file
-    elementWrite(elName, elData);
+    elementWrite(outputDir + elName, elData);
     String [] returnedFilename = {elName};
     return returnedFilename;
   }
@@ -1506,7 +1512,7 @@ public class translate2geda {
         elName = FPName + ".fp";
 
         // we now write the element to a file
-        elementWrite(elName, elData);
+        elementWrite(outputDir + elName, elData);
         // add the FP to our list of converted elements
         convertedFiles.add(elName); 
         newElement = ""; // reset the variable for batch mode
@@ -1614,7 +1620,7 @@ public class translate2geda {
             + symAttributes; // the final attributes
 
         // we now write the element to a file
-        elementWrite(elName, elData);
+        elementWrite(outputDir + elName, elData);
         // add the symbol to our list of converted elements
         convertedFiles.add(elName);
         // and we rest the variable for the next symbol
