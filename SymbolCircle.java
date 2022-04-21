@@ -32,11 +32,11 @@
 
 //C posx posy radius unit convert thickness cc
 //With
-//• posx posy = circle center position
-//• unit = 0 if common to the parts; if not, number of part (1. .n).
-//• convert = 0 if common to all parts. If not, number of the part (1. .n).
-//• thickness = thickness of the outline.
-//• cc = N F or F ( F = filled circle,; f = . filled circle, N = transparent background)
+// posx posy = circle center position
+// unit = 0 if common to the parts; if not, number of part (1. .n).
+// convert = 0 if common to all parts. If not, number of the part (1. .n).
+// thickness = thickness of the outline.
+// cc = N F or F ( F = filled circle,; f = . filled circle, N = transparent background)
 
 public class SymbolCircle extends SymbolElement
 {
