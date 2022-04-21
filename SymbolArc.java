@@ -32,14 +32,14 @@
 
 //A posx posy radius start end part convert thickness cc start_pointX start_pointY end_pointX end_pointY.
 //With:
-//• posx posy = arc center position
-//• start = angle of the starting point (in 0,1 degrees).
-//• end = angle of the end point (in 0,1 degrees).
-//• unit = 0 if common to all parts; if not, number of the part (1. .n).
-//• convert = 0 if common to the representations, if not 1 or 2.
-//• thickness = thickness of the outline or 0 to use the default line thickness.
-//• cc = N F or F ( F = filled arc,; f = . filled arc, N = transparent background)
-//• start_pointX start_pointY = coordinate of the starting point (role similar to start)
+// posx posy = arc center position
+// start = angle of the starting point (in 0,1 degrees).
+// end = angle of the end point (in 0,1 degrees).
+// unit = 0 if common to all parts; if not, number of the part (1. .n).
+// convert = 0 if common to the representations, if not 1 or 2.
+// thickness = thickness of the outline or 0 to use the default line thickness.
+// cc = N F or F ( F = filled arc,; f = . filled arc, N = transparent background)
+// start_pointX start_pointY = coordinate of the starting point (role similar to start)
 
 public class SymbolArc extends SymbolElement
 {
