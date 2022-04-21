@@ -444,6 +444,11 @@ public class Pad extends FootprintElementArchetype
         token = token.substring(4);
         kicadShapeOrientation
             = (long)(10*Integer.parseInt(token.replaceAll("[\"R>/]","")));
+      } else if (token.startsWith("layer=")) {
+        token = token.substring(6);
+        if (token.replaceAll("[\"R>/]","").equals("16")) {
+            gEDAflag = "onsolder";
+        }
       }
     }
     kicadDrillShapeTwo = '0'; // ignore slot possibility for now
@@ -570,7 +575,14 @@ public class Pad extends FootprintElementArchetype
           else if (kicadPadAttributeType.startsWith("SMD") ||
                    kicadPadAttributeType.startsWith("CONN"))
             {
-              gEDAflag = "square"; // "0x0000" now deprecated
+              if (gEDAflag.equals("onsolder"))
+                {
+                   gEDAflag = "square,onsolder"; // "0x0000" now deprecated
+                }
+	      else
+                {
+                   gEDAflag = "square"; // "0x0000" now deprecated
+                }
             }
           break;
 
