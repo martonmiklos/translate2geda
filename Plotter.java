@@ -1576,10 +1576,10 @@ class Plotter {
     // get pretty bloated in the parser otherwise. 
     //
     private double parseDouble(String num) {
-        Double d = new Double(0.0);
+        Double d = Double.valueOf(0.0);
 
         try {
-            d = new Double(num);
+            d = Double.valueOf(num);
         }
         catch (Exception e) {};		// Cool exception handler, eh? ;)
 
@@ -1592,10 +1592,10 @@ class Plotter {
     // Same thing for Integer :)
     //
     private int parseInteger(String num) {
-        Integer i = new Integer(0);
+        Integer i = Integer.valueOf(0);
 
         try {
-            i = new Integer(num);
+            i = Integer.valueOf(num);
         }
         catch (Exception e) {};		// Cool exception handler, eh? ;)
 
