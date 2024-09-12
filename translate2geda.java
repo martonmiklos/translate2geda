@@ -793,6 +793,9 @@ public class translate2geda {
                 endOfPinDef = true;
               } else {
                 portPinDef.add(currentLine);
+                if (currentLine.endsWith(");")) {
+                  endOfPinDef = true;
+                }
               }
             }
           }
